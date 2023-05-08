@@ -3,19 +3,25 @@
 
 // This model is based on the MO5 Expansion connector cover, generalized to other sizes.
 
-
+// TODO: split the cartridge stand part out?
 
 /* [Variants] */
 
 // 
-variant_port =  -1; // [-1:Preview all,-2:All Amstrad CPC, -3:All Commodore C64,0:Custom - see below,1:Thomson MO5/… Extension,2:Amstrad CPC Expansion,3:Amstrad CPC Printer,4:Amstrad CPC Drive 2,5:Commodore C64 User,6:Commodore C64 Cassette,7:Matra Alice,8:TRS-80 MC-10,9:Philips VG 5000,10:Generic 2x17 - 5-1/4 Drive,11:Generic 2x20]
+variant_port =  -1; // [-1:Preview all ports,-2:Preview all cartridges,-3:All Amstrad CPC ports, -4:All Commodore C64 ports,0:Custom - see below,1:Thomson MO5/… Extension,2:Amstrad CPC Expansion,3:Amstrad CPC Printer,4:Amstrad CPC Drive 2,5:Commodore C64 User,6:Commodore C64 Cassette,7:Matra Alice,8:TRS-80 MC-10,9:Philips VG 5000,10:Generic 2x17 - 5-1/4 Drive,11:Generic 2x20,12:C64 Cartridge]
 // Matra Alice & TRS-80 MC-10 should have their own screwed port covers but added just in case
 // Others:
 // TRAN Jasmin 2 drive for ORIC: 2x20
 // TODO: consolidate into a shorter list? Or add text labels
 
 
-variant_options = 0; // [0:None - just cover the port,1:Add some grip for easy removal,10:Small foot - use as cartridge stand]
+variant_options = 0; // [0:None - just cover the port,1:Add some grip for easy removal,11:Small foot - use as cartridge stand,12:Large foot - use as cartridge stand,13:Huge foot - use as cartridge stand,14:Mega foot - use as cartridge stand,15:Giga foot - use as cartridge stand]
+
+// (Value clipped for small sized foot)
+variant_foot_radius = 0; // [0:1:30]
+
+// The $fn value for rounding
+variant_foot_radius_faces = 0; // [0:Round,4:Octagon,8,10]
 
 /* [Custom: only for "Custom size" variant] */
 
@@ -78,10 +84,12 @@ definitions = [
     [25, 2.54, 1.6, 15.5, "DarkGrey"], // Philips VG 5000
     [17, 2.54, 1.6, 15.5, "DimGrey"], // Generic 2x17 - 5-1/4" Drive
     [20, 2.54, 1.6, 15.5, "DimGrey"], // Generic 2x20
+    [22, 2.54, 1.6, 15.5, "Wheat"], // C64 Cartridge
 ];
 
 preview_variants = [ // -1 and down:
-    [1:11], // All
+    [1:11], // All ports
+    [12:12], // All cartridges
     [2:4], // Amstrad
     [5:6] // C64
 ];
@@ -134,6 +142,25 @@ module edge_conn_cover(contacts = 19, pitch = 2.54, thickness = 1.6, height = 15
                             cube([base_sz.x - 10,1,1], center = true);
         }
     }
+    // Foot options
+    if (variant_options > 9) {
+        echo(variant_options % 10);
+        foot_sz = top_sz + ((variant_options % 10) + 1) * 10 * [1,1];
+        foot_scale = [top_sz.x / foot_sz.x, top_sz.y / foot_sz.y];
+        foot_h = 3;
+        foot_r = min(variant_foot_radius, 7 * ((variant_options % 10) + 0));
+        foot_fn = variant_foot_radius_faces > 0 ? variant_foot_radius_faces : $fn;
+        translate([0,0,height+foot_h-2])
+            rotate([180,0,0])
+                linear_extrude(foot_h-1, scale = foot_scale)
+                    offset(r = foot_r, $fn = foot_fn)
+                        square(foot_sz - foot_r*[2,2], center = true);
+        translate([0,0,height+foot_h-1])
+            rotate([180,0,0])
+                linear_extrude(1)
+                    offset(r = foot_r, $fn = foot_fn)
+                        square(foot_sz - foot_r*[2,2], center = true);
+    }
 }
 
 
@@ -164,8 +191,6 @@ module preview_pcb_edge_conn(defs) {
             for (dx = [0:face_contact_count-1])
                 translate([(extra_x + pcb_pitch)/2-pcb_sz.x/2 + pcb_pitch * dx, dy * pcb_thickness/2, pcb_h/3])
                     cube([pcb_pitch/2, 0.1, pcb_h], center = true);
-            
-    
 }
 
 
