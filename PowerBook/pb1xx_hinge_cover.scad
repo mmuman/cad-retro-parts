@@ -63,6 +63,13 @@ module pb_1xx_hinge_cover() {
         }
 
     }
+    // reference
+    translate([0,d_in/2+0.1,h_total/2-2.5]) rotate([0,90,-90])
+        linear_extrude(0.4)
+            text("815-1231>REV  8", size=2, valign="center", halign="center");
+    translate([-3.3,d_in/2-0.8,h_total/2-2.6]) rotate([0,90,-60])
+        linear_extrude(0.4)
+            text("remake: mmu_man", size=1.6, valign="center", halign="center");
     // bbox
     if (false&&$preview) color("white", 0.2)
         translate([0,0,h_total/2])
