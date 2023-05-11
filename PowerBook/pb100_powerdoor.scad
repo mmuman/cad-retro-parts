@@ -32,14 +32,14 @@ color("grey")
     import("PB180_ioDoor.stl");
 
     if (powerbutton_hole)
-        translate([10,13.5,-2]) hull() {
-            d = 15;
+        translate([8.5,14.5,-2]) hull() {
+            d = 16;
             cylinder(d = d, h = d);
             translate([-d/2,0,d/2]) cube(d, center = true);
         }
 
     if (modemport_hole)
-        translate([155,20,-2]) cube([18,24,20], center = true);
+        translate([154.5,20.55,-2]) cube([16.1,22,20], center = true);
 
     if (powerdoor_marking) marking();
 }
