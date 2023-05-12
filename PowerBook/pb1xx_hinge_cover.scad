@@ -29,7 +29,7 @@ module pb_1xx_hinge_cover() {
                 base_shape(d_in);
             }
             // clip the x>0 part else it won't extrude
-            square(30);
+            square(h_total);
         }
     // the bevel
     rotate([90,0,0]) {
