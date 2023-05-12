@@ -1,4 +1,10 @@
+// Display hinge cover for PowerBook 100 Series
+// Copyright François Revol, 2023
 
+/* [Printing options] */
+
+
+// Optimize for FDM printers (larger clips)
 optimize_fdm = false;
 
 /* [Hidden] */
@@ -7,7 +13,7 @@ optimize_fdm = false;
 $fa= $preview ? 6 : 2;
 $fs=0.1;
 
-module pb_1xx_hinge_cover() {
+module pb_1xx_hinge_cover(optimize_fdm = false) {
     d_out = 17.2;
     d_middle = 15.3;
     d_in = 13.2;
@@ -81,4 +87,4 @@ module pb_1xx_hinge_cover() {
             cube([d_out,d_out,h_total], center=true);
 }
 
-pb_1xx_hinge_cover();
+pb_1xx_hinge_cover(optimize_fdm);
