@@ -56,7 +56,7 @@ module pb_1xx_hinge_cover(optimize_fdm = false) {
                         linear_extrude(h_clip, scale = optimize_fdm ? 0.77 : 0.9)
                             square(base, center=true);
                         if (!optimize_fdm)
-                            translate([-0.8,0,0]) cylinder(d = 0.9, h = h_clip+1);
+                            translate([-1.0,0,0]) cylinder(d = 0.9, h = h_clip+1);
                         translate([0.8,0,h_clip]) rotate([0,55,0])
                             cube([4,4,1], center=true);
                         translate([1.3,0,h_clip-1.05-1.2])
