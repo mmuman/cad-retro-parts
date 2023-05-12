@@ -7,11 +7,14 @@
 
 /* [Variants] */
 
-variant = 0; // [0:plain]
+variant = 0; // [0:plain - no hole]
 
 /* [Printing options] */
 
+// Optimize for FDM printing (less supports, thicker planes…)
 optimize_fdm = false;
+
+print_orientation = 1; // [0:Vertically,1:Face down - may still need supports]
 
 // we need more faces on such a small piece
 $fa=6;
@@ -19,13 +22,17 @@ $fs=0.1;
 
 
 module mega_st_backplate(optimize_fdm=false) {
-    bounds = [72.8, 21.5];
-    layers = [1.2, 1.7, optimize_fdm ? 1 : 0.6];
-    inside = [66, 16];
-    h_inside = 2.5 - 1.6;
 
     // sum vector members up to index
     function vadd(v, i = -1, r = 0) = i >= 0 ? vadd(v, i - 1, r + v[i]) : r;
+
+    bounds = [72.8, 21.5];
+    layers = [1.2, 1.7, optimize_fdm ? 1 : 0.6];
+    h_total = vadd(layers, len(layers) - 1);
+    echo(h_total);
+    inside = [66, 16];
+    h_inside = 2.5 - 1.6 + (optimize_fdm ? 0.1 : 0);
+
 
     module border(inner=false) {
         inset = 1.6;
@@ -52,8 +59,11 @@ module mega_st_backplate(optimize_fdm=false) {
         // remove matter for the inside plate
         translate([0, -inside.y/2-1.9 , h_inside])
             difference() {
-                linear_extrude(4)
-                    square(inside, center=true);
+                base = optimize_fdm ? inside - [2,2] : inside;
+                sc = [inside.x/base.x,inside.y/base.y];
+                echo(sc);
+                #linear_extrude(h_total-h_inside+0.1, scale = sc)
+                    square(base, center=true);
                 linear_extrude(0.2)
                     text("C1000 30", valign="center", halign="center", size=5, font="Clear Sans Thin:style=Regular,Arial");
                 /*translate([0, -6])
@@ -64,5 +74,6 @@ module mega_st_backplate(optimize_fdm=false) {
     }
 }
 
-mega_st_backplate(optimize_fdm);
+rotate([print_orientation == 0 ? -90 : 0, 0, 0])
+    mega_st_backplate(optimize_fdm);
 
