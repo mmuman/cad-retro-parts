@@ -10,6 +10,9 @@
 // Optimize for FDM printers (less supports, larger details)
 optimize_fdm = true;
 
+// Avoids supports when printed face-down
+notches_as_indents = true;
+
 // Keep text for FDM optimized
 keep_text = true;
 
@@ -26,7 +29,7 @@ $fs= $preview ? 0.2 : 0.1;
 
 
 module pb1xx_trackball_ring(optimize_fdm = false) {
-    n_dz = optimize_fdm ? 0 : 0.5;
+    n_dz = notches_as_indents ? 0 : 0.5;
     ball_dz = 7.3;
     ball_margin = 0.5;
     border_r = 0.5;
@@ -100,24 +103,38 @@ module pb1xx_trackball_ring(optimize_fdm = false) {
                     cylinder(d = 38, h = 7.3);
                     cylinder(d = 33.5, h = 8);
                 }
-                for (a = [0,180])
-                    rotate([0,0,a])
-                        translate([4.4,0,7.4+0.35])
-                            rotate([90,0,0])
-                                cylinder(d=2.4, h=40);
+                union() {
+                    for (a = [0,180])
+                        rotate([0,0,a])
+                            translate([4.4,0,7.4+0.35])
+                                rotate([90,0,0])
+                                    cylinder(d=2.4, h=40);
+                }
             }
+            // Some extra supports for the clips
+            if (optimize_fdm) for (a = [0,180])
+                translate([0,0,3.5]) rotate([0,0,a])
+                    linear_extrude(4,twist = -10)
+                        rotate([0,0,-30])
+                            translate([0,18])
+                                square([2,4], center = true);
             difference() {
                 intersection() {
                     translate([0,0,7.3]) cylinder(d = 38, h = 1.6-0.1);
-                    translate([0,0,7.3+1]) cube([11,40,2], center=true);
+                    union() {
+                        translate([0,0,7.3+1]) cube([11,40,2], center=true);
+                        if (optimize_fdm)
+                            rotate([0,0,-6]) translate([0,0,7.3+1]) cube([11,40,2], center=true);
+                    }
                 }
                 // Room for the ball to pass between clips
                 translate([0,0,7.3-0.1]) cylinder(d = 31.0, h = 3);
                 difference() {
+                    fdm_delta = optimize_fdm ? 2 : 0;
                     translate([0,0,7.3-0.1]) cylinder(d = 33.5, h = 3);
                     for (a = [0,180])
-                        rotate([0,0,a]) translate([-4.3,-16,7.4])
-                            cube([2.4,5,5], center=true);
+                        rotate([0,0,a]) translate([-4.3-fdm_delta/2,-16,7.4])
+                            cube([2.4 + fdm_delta,5,5], center=true);
                 }
                 //translate([0,0,7.3]) cube([6.4,40,0.4], center=true);
                 for (a = [0,180])
@@ -142,11 +159,11 @@ module pb1xx_trackball_ring(optimize_fdm = false) {
         // debug
         //if ($preview) cube(30);
         // Notches as indents for FDM print
-        if (optimize_fdm)
+        if (notches_as_indents)
             notches(o = 0.1);
     }
     
-    if (!optimize_fdm)
+    if (!notches_as_indents)
         translate([0,0,n_dz]) notches();
     if ($preview)
         color("DimGrey", 0.2) translate([0,0,ball_dz+n_dz]) sphere(d = 30);
@@ -218,7 +235,7 @@ if ($preview) {
     //insertion_distance
     echo($t);
     translate([0,0,insertion_distance*20+9-min(9,$t*20)])
-        rotate([flip?180:0,0,min(0,20-$t*50)*2-40])
+        rotate([flip?180:0,0,min(0,20-$t*48)*2-40])
             pb1xx_trackball_ring(optimize_fdm);
 } else {
     pb1xx_trackball_ring(optimize_fdm);
