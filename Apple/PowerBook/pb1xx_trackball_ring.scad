@@ -13,11 +13,16 @@ optimize_fdm = true;
 // Keep text for FDM optimized
 keep_text = true;
 
+/* [Preview] */
+
+flip = false;
+insertion_distance = 10; // [0.0:0.1:10]
+
 /* [Hidden] */
 
 // we need more faces on such a small piece
 $fa= $preview ? 6 : 2;
-$fs=0.1;
+$fs= $preview ? 0.2 : 0.1;
 
 
 module pb1xx_trackball_ring(optimize_fdm = false) {
@@ -147,4 +152,74 @@ module pb1xx_trackball_ring(optimize_fdm = false) {
         color("DimGrey", 0.2) translate([0,0,ball_dz+n_dz]) sphere(d = 30);
 }
 
-pb1xx_trackball_ring(optimize_fdm);
+
+module pb1xx_trackball_opening(optimize_fdm = false) {
+    module top_button(o = 0) {
+        d = -o; //0.5;
+        translate([0,13,0]) {//minkowski() { // too slow
+            difference() {
+                intersection() {
+                    cube([73.5,25.5,8] - d * [2,2,2], center=true);
+                    translate([0,-88,0]) cylinder(d = 200 - d, h = 20, center = true);
+                }
+                translate([0,-13,0]) cylinder(d = 39.8 + d*2, h = 20, center = true);
+            }
+            //sphere(d);
+        }
+    }
+
+    color("grey",0.4) difference() {
+        translate([0,0,-5]) cube([100, 80, 10], center=true);
+        top_button(1);
+
+        difference() {
+            union() {
+                translate([0,0,-6]) cylinder(d = 39.5, h = 40);
+                translate([0,0,-10.1-6]) cylinder(d = 38.9, h = 10.2);
+            }
+            difference() {
+                union() {
+                    translate([0,0,-4-3.6]) cylinder(d = 36.5, h = 4);
+                    difference() {
+                        translate([0,0,-2-5.6]) cylinder(d = 40, h = 2);
+                        translate([0,0,-10-6]) cylinder(d = 36, h = 10.1);
+                    }
+                }
+                // indents for the clips, actually square but well
+                for (a = [0,180])
+                    rotate([0,0,90+a])
+                        translate([-4.4,0,-7.5])
+                            rotate([90,0,0])
+                                cylinder(d=2.4, h=40);
+                rotate([0,0,45]) cube([50,13.3,30], center=true);
+                rotate([0,0,85]) cube([50,14,30], center=true);
+            }
+            intersection() {
+                union()
+                    for(a=[0,180])
+                        hull() {
+                            translate([0,0,-9.6])
+                                linear_extrude(height = 6, twist = -40)
+                                    rotate([0,0,a-14.5]) translate([0, (33.5+3.3)/2])
+                                        square([4, 3.3], center=true);
+                            rotate([0,0,a-45]) translate([-7.2, (33.5)/2-2,-10+0.5]) rotate([-90,0,0]) cylinder(d = 1, h = 3.3);
+                        }
+                rotate([0,0,85]) cube([50,15,20], center=true);
+            }
+        }
+        cylinder(d = 33.1, h = 40, center=true);
+        translate([0,0,-20]) rotate([0,0,-90]) cube(60);
+    }
+    //color("grey") top_button();
+}
+
+if ($preview) {
+    pb1xx_trackball_opening();
+    //insertion_distance
+    echo($t);
+    translate([0,0,insertion_distance*20+9-min(9,$t*20)])
+        rotate([flip?180:0,0,min(0,20-$t*50)*2-40])
+            pb1xx_trackball_ring(optimize_fdm);
+} else {
+    pb1xx_trackball_ring(optimize_fdm);
+}
