@@ -112,25 +112,31 @@ module pb1xx_trackball_ring(optimize_fdm = false) {
                 }
             }
             // Some extra supports for the clips
-            if (optimize_fdm) for (a = [0,180])
-                translate([0,0,3.5]) rotate([0,0,a])
+            if (optimize_fdm) for (a = [0,180]) {
+                /*translate([0,0,3.5]) rotate([0,0,a])
                     linear_extrude(4,twist = -10)
-                        rotate([0,0,-30])
+                        rotate([0,0,-35])
                             translate([0,18])
-                                square([2,4], center = true);
+                                square([2,4], center = true);*/
+                rotate([0,-40,a-6])
+                    translate([9.1,18,-1])
+                        cube([1.5,10,8], center=true);
+            }
             difference() {
                 intersection() {
                     translate([0,0,7.3]) cylinder(d = 38, h = 1.6-0.1);
                     union() {
                         translate([0,0,7.3+1]) cube([11,40,2], center=true);
-                        if (optimize_fdm)
-                            rotate([0,0,-6]) translate([0,0,7.3+1]) cube([11,40,2], center=true);
+                        if (optimize_fdm) {
+                            //#rotate([0,0,-6]) translate([0,0,7.3+1]) cube([11,40,2], center=true);
+                            rotate([0,0,-6]) translate([0,0,7.3]) linear_extrude(2, scale=[0.75,1]) square([11+2.5,40], center=true);
+                        }
                     }
                 }
                 // Room for the ball to pass between clips
                 translate([0,0,7.3-0.1]) cylinder(d = 31.0, h = 3);
                 difference() {
-                    fdm_delta = optimize_fdm ? 2 : 0;
+                    fdm_delta = optimize_fdm ? 3 : 0;
                     translate([0,0,7.3-0.1]) cylinder(d = 33.5, h = 3);
                     for (a = [0,180])
                         rotate([0,0,a]) translate([-4.3-fdm_delta/2,-16,7.4])
