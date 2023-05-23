@@ -19,15 +19,9 @@ $fs= $preview ? 0.2 : 0.1;
 
 module pb1xx_kickstand(optimize_fdm = false) {
     screw_pos = [(11-15.9)/2, (11-15.9)/2, 0];
+    total_h = 14.0;
 
     module step_indent() {
-        /*
-        #translate([0,0,30]) intersection() {
-            a = 5;
-            cube([25, 4, 4], center=true);
-            //rotate([-a,0,-a]) cube([25, 4, 4], center=true);
-            rotate([a,0,a]) cube([25, 4, 4], center=true);
-        }*/
         translate([0,0,-0.1])
             for (a = [0,180])
                 rotate([0,0,a])
@@ -38,27 +32,44 @@ module pb1xx_kickstand(optimize_fdm = false) {
     difference() {
         // main volume
         union() {
+            cyl_r = 2;
+            foot_r = 0.5;
             intersection() {
-                sr = 35;
-                //cylinder(d1 = 33, d2 = 31.6, 9.5);
-                cylinder(d1 = 33, d2 = 31.6-1.4, 2*9.5);
-                translate([0,0,13.2-sr])
-                    sphere(r = sr);
+                minkowski() {
+                    intersection() {
+                        sr = 35;
+                        //cylinder(d1 = 33, d2 = 31.6, 9.5);
+                        translate([0,0,-0.1])
+                            cylinder(d1 = 33 - 2*cyl_r, d2 = 31.6-1.4-2*cyl_r, 2*9.5);
+                        translate([0,0,total_h-0.5-sr])
+                            sphere(r = sr-cyl_r);
+                    }
+                    sphere(r = cyl_r);
+                }
+                cylinder(d = 35, h = 20);
             }
             
             difference() {
-                intersection() {
-                    hull() {
-                        //44.6
-                        for (dx = [0, 34.6-8.6-0.3])
-                            translate([dx, 0, 0])
-                                cylinder(d1 = 9.6, d2 = 8.6, h = 15);
+                minkowski() {
+                    intersection() {
+                        hull() {
+                            for (dx = [0, 34.6-8.6-0.3])
+                                translate([dx, 0, foot_r])
+                                    cylinder(d1 = 9.6-2*foot_r, d2 = 8.6-2*foot_r, h = 15);
+                        }
+                        cr = 150;
+                        translate([0,10/2,total_h-cr]) rotate([90,0,0])
+                            cylinder(r = cr-foot_r, h = 10, $fa = $fa/4);
                     }
-                    cr = 150;
-                    translate([0,10/2,14.2-cr]) rotate([90,0,0])
-                        cylinder(r = cr, h = 10, $fa = $fa/4);
+                    sphere(r = foot_r);
                 }
-                
+                translate([34.6-8.6-0.3, 0, 0])
+                    difference() {
+                        linear_extrude(12.5, scale=2)
+                            translate([-0.3,0])
+                                square([0.6,10], center=true);
+                        cube([2, 8.4, 2*11.4], center=true);
+                    }
             }
         }
 
@@ -121,11 +132,10 @@ module pb1xx_kickstand(optimize_fdm = false) {
             translate([0,0,-0.1]) cylinder(d = 2.0, h = 15.5);
         }
     // bounds
-    //14.2
-if (false)
-    color("white", 0.2)
-        translate([(47-33)/2,0,14.2/2])
-            cube([47,33,14.2/*19*/], center=true);
+    if (false)
+        color("white", 0.2)
+            translate([(47-33)/2,0,14.2/2])
+                cube([47,33,14.2/*19*/], center=true);
 }
 
 
