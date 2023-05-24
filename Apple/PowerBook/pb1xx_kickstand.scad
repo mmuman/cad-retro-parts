@@ -13,7 +13,9 @@ optimize_fdm = true;
 // Pre-thread for the official screw
 pre_thread = true;
 
+print_right = true;
 
+print_left = true;
 
 /* [Preview] */
 
@@ -26,7 +28,7 @@ $fa= $preview ? 6 : 2;
 $fs= $preview ? 0.2 : 0.1;
 
 
-module pb1xx_kickstand(optimize_fdm = false) {
+module pb1xx_kickstand(right_side = true, optimize_fdm = false) {
     screw_pos = [(11-15.9)/2, (11-15.9)/2, 0];
     total_h = 14.0;
 
@@ -38,7 +40,7 @@ module pb1xx_kickstand(optimize_fdm = false) {
                         polygon([[0,0],[11.5,3],[11.5,-3]]);
     }
 
-    difference() {
+    mirror([0,right_side?0:1,0]) difference() {
         // main volume
         union() {
             cyl_r = 2;
@@ -153,7 +155,7 @@ module pb1xx_kickstand(optimize_fdm = false) {
         //if ($preview) rotate([0,0,0]) cube(40);
     }
     // screw post
-    translate(screw_pos-[0,0,5.0])
+    mirror([0,right_side?0:1,0]) translate(screw_pos-[0,0,5.0])
         difference() {
             union() {
                 if (optimize_fdm)
@@ -171,6 +173,9 @@ module pb1xx_kickstand(optimize_fdm = false) {
             }
             //if ($preview) rotate([0,0,0]) cube(40);
         }
+
+    // TODO: "REV 3" marking
+
     // bounds
     if (false)
         color("white", 0.2)
@@ -179,6 +184,11 @@ module pb1xx_kickstand(optimize_fdm = false) {
 }
 
 
-translate([0,0,$preview?0:14.2])
-    rotate([$preview?0:180,0,0])
-        pb1xx_kickstand(optimize_fdm);
+if (print_right)
+    translate([-15,-15,$preview?0:14.2])
+        rotate([$preview?0:180,0,0])
+            pb1xx_kickstand(true, optimize_fdm);
+if (print_left)
+    translate([15,15,$preview?0:14.2])
+        rotate([$preview?0:180,0,180])
+            pb1xx_kickstand(false, optimize_fdm);
