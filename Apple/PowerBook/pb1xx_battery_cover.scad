@@ -13,7 +13,7 @@ $fn = 30;
 
 // model export from:
 // https://www.thingiverse.com/thing:5249730
-//translate([2.5,0,0]) import("Powerbook1x0BatteryCover.stl");
+//translate([2.5,0,10]) import("Powerbook1x0BatteryCover.stl");
 
 // 3D scan by Ron's Computer Videos
 // https://thangs.com/designer/RonsCompVids/3d-model/PowerBook%201xx%20Series%20Battery%20Cover-972309
@@ -156,7 +156,7 @@ module pb1xx_battery_cover() {
 // bounding box
 //color("green", 0.3) translate([0,0,7.35/2]) cube([116,28,7.35], center=true);
 
-translate([0,0,10]) pb1xx_battery_cover();
+pb1xx_battery_cover();
 
 
 
