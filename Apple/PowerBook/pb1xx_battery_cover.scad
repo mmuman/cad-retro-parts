@@ -133,10 +133,11 @@ module pb1xx_battery_cover() {
                 translate([dx*l/2,0,0]) cylinder(d = 1, h = 2);
         }
     }
-    for (dx = [-45,-16,10,36])
-        translate([dx,bbox.y/2-0.5,bbox.z-1.5]) rotate([90,0,0])  slide_tab(l = dx < -17 ? 8.6 : 4.6);
-    for (dx = [-18,10,36])
-        translate([dx,-bbox.y/2+0.5,bbox.z-1.5]) rotate([-90,0,0])  slide_tab(l = dx < -17 ? 8.6 : 4.6);
+    for (side=[[1,[-45,-16,10,36]], [-1,[-18,10,36]]]) {
+        dy = side[0];
+        for (dx = side[1])
+            translate([dx,dy*(bbox.y/2-0.5),bbox.z-1.5]) rotate([dy*90,0,0])  slide_tab(l = dx < -17 ? 8.6 : 4.6);
+    }
 
     // Battery clips
     for (dy=[-1,1], dx=[-1,1]) {
