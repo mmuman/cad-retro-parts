@@ -110,7 +110,7 @@ module pb1xx_battery_cover() {
             translate([5,0,0]) rotate([0,45,0]) cube([8,8,2], center=true);
             translate([-6,0,0]) rotate([0,45,0]) cube([8,8,2], center=true);
             translate([-6,0,0.5]) rotate([0,-45,0]) cube([8,8,2], center=true);
-            translate([-0.7,0,-1]) rotate([0,40,0]) cube([0.8,8,1.97], center=true);
+    translate([-0.3,0,-0.5]) rotate([90,0,0]) cylinder(h = 10, d=1, center=true);
     translate([-1.35,0,-1]) cube([2.0,8,2], center=true);
     translate([-0.8,0,-1.5]) cube([2.0,8,2], center=true);
     }
