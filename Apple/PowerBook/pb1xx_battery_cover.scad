@@ -140,10 +140,14 @@ module pb1xx_battery_cover() {
 
     // Battery clips
     for (dy=[-1,1], dx=[-1,1]) {
-        translate([dx*14,dy*7,3.5]) {
-            intersection() {
-                cube([8,3.5,3], center=true);
-                rotate([dy*10,0,0]) cube([8,3,8], center=true);
+        translate([9.5+dx*14,dy*8.0,3.5]) {
+            difference() {
+                    intersection() {
+                    cube([8,3.5,3], center=true);
+                    rotate([dy*13,0,0]) cube([8,2.6,8], center=true);
+                }
+                for(d=[-1,1])
+                    translate([d*1.7,dy*2.4,0]) cube([2,3,8], center=true);
             }
         }
     }
