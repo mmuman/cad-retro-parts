@@ -21,9 +21,10 @@ $fn = 30;
 //import("PB_BAT1.stl");
 
 
+function pb1xx_battery_cover_bbox() = [116,28,7];
 
-module basic_shape() {
-    bbox = [116,28];
+module pb1xx_battery_cover_basic_shape() {
+    bbox = pb1xx_battery_cover_bbox();
 
     hull() {
         r1 = 5;
@@ -39,13 +40,13 @@ module basic_shape() {
 
 module pb1xx_battery_cover() {
     bottom_r = 2.0;
-    bbox = [116,28,7];
+    bbox = pb1xx_battery_cover_bbox();
 
     difference() {
         minkowski() {
             translate([0,0,bottom_r]) linear_extrude(10)
                 offset(r = -bottom_r)
-                    basic_shape();
+                    pb1xx_battery_cover_basic_shape();
             sphere(bottom_r);
         }
         translate([0,0,bbox.z*1.5])
@@ -55,7 +56,7 @@ module pb1xx_battery_cover() {
             linear_extrude(7)
                 offset(r = -1)
                     difference() {
-                        basic_shape();
+                        pb1xx_battery_cover_basic_shape();
                         translate([bbox.x/2,6.9])
                             square([2,1], center=true);
                     }
@@ -63,7 +64,7 @@ module pb1xx_battery_cover() {
             linear_extrude(1,scale=[1.005,1.01])
                 offset(r = -1)
                     difference() {
-                        basic_shape();
+                        pb1xx_battery_cover_basic_shape();
                         translate([bbox.x/2,6.9])
                             square([2,1], center=true);
                     }
@@ -154,11 +155,63 @@ module pb1xx_battery_cover() {
     }
 }
 
+module pb1xx_battery_cover_battery_preview() {
+    radius = 1;
+    difference() {
+        linear_extrude(2.61, scale=[1,12.6/13.6]) square([83.7,13.6],center = true);
+        translate([0,0,-1]) cube([90,8.7,10],center=true);
+    }
+    minkowski() {
+        difference() {
+            translate([0,0,2.6+50]) cube([102,20.8,100]-[1,1,1]*2*radius, center=true);
+            translate([20,0,100+5]) rotate([90,0,0]) cylinder(r=15,h=30,center=true);
+        }
+        sphere(r=radius, $fn = 20);
+    }
+}
+
+module pb1xx_battery_cover_case_preview() {
+    bbox = pb1xx_battery_cover_bbox();
+
+    difference() {
+        union() {
+            translate([0,0,4.5])
+                linear_extrude(5)
+                    pb1xx_battery_cover_basic_shape();
+            linear_extrude(5)
+                offset(r = -1)
+                    pb1xx_battery_cover_basic_shape();
+        }
+        translate([bbox.x/2,6.9,-1])
+            linear_extrude(20)
+                square([8,3], center=true);
+        translate([0,0,-1])
+            linear_extrude(20)
+                offset(r = -1 - 1.5)
+                    pb1xx_battery_cover_basic_shape();
+        translate([-bbox.x/2,0])
+            cube([20,bbox.y,20],center=true);
+    }
+}
+
 // bounding box
 //color("green", 0.3) translate([0,0,7.35/2]) cube([116,28,7.35], center=true);
 
-pb1xx_battery_cover();
+// XXX: meshlab project expects it there
+//translate([0,0,10])
+difference() {
+    union() {
+        pb1xx_battery_cover();
+        //cube([25,6,18]);
+    }
+    //translate([0,0,-1]) cube([20,2,20]);
+}
 
+
+if ($preview) {
+    translate([0,0,2.6]) color("pink", 0.6) pb1xx_battery_cover_case_preview();
+    translate([0,0.55,2.6]) color("white", 0.3) pb1xx_battery_cover_battery_preview();
+}
 
 
 
