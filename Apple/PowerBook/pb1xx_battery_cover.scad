@@ -131,20 +131,26 @@ module pb1xx_battery_cover() {
     module slide_tab(l = 4.6) {
         hull() {
             for (dx = [-1, 1])
-                translate([dx*l/2,0,0]) cylinder(d = 1, h = 2);
+                translate([dx*l/2,0,0]) cylinder(d = 1, h = optimize_fdm?2.15:2);
         }
     }
     for (side=[[1,[-45,-16,10,36]], [-1,[-18,10,36]]]) {
         dy = side[0];
-        for (dx = side[1])
+        for (dx = side[1]) {
             translate([dx,dy*(bbox.y/2-0.5),bbox.z-1.5]) rotate([dy*90,0,0])  slide_tab(l = dx < -17 ? 8.6 : 4.6);
+            if (optimize_fdm)
+                translate([dx,dy*(bbox.y/2-3.0+.45),bbox.z-5.0])
+                    linear_extrude(4,scale=[0.8,0.1])
+                        translate([0,-dy*3/2])
+                            square([(dx < -17 ? 10:6)+2,3], center=true);
+        }
     }
 
     // Battery clips
     for (dy=[-1,1], dx=[-1,1]) {
         translate([9.5+dx*14,0.55+dy*8.1,3.5]) {
             difference() {
-                    intersection() {
+                intersection() {
                     cube([8,3.5,3], center=true);
                     rotate([dy*13,0,0]) cube([8,2.6,8], center=true);
                 }
