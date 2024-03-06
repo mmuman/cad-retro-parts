@@ -1,6 +1,12 @@
 // PowerBook 1xx Battery door cover
 // Copyright François Revol, 2024
 
+/* [Preview] */
+
+preview_battery = true;
+
+preview_case = true;
+
 /* [Print options] */
 
 // Optimize for FDM printers (less supports, larger details)
@@ -215,8 +221,12 @@ difference() {
 
 
 if ($preview) {
-    translate([0,0,2.6]) color("pink", 0.6) pb1xx_battery_cover_case_preview();
-    translate([0,0.55,2.6]) color("white", 0.3) pb1xx_battery_cover_battery_preview();
+    if (preview_case)
+        translate([0,0,2.6]) color("pink", 0.6)
+            pb1xx_battery_cover_case_preview();
+    if (preview_battery)
+        translate([0,0.55,2.6]) color("white", 0.3)
+            pb1xx_battery_cover_battery_preview();
 }
 
 
