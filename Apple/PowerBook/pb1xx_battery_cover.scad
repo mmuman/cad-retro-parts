@@ -7,6 +7,8 @@ preview_battery = true;
 
 preview_case = true;
 
+preview_colors = true;
+
 /* [Print options] */
 
 // Optimize for FDM printers (less supports, larger details)
@@ -213,7 +215,7 @@ module pb1xx_battery_cover_case_preview() {
 //translate([0,0,10])
 difference() {
     union() {
-        pb1xx_battery_cover();
+        color(preview_colors ? "DimGray" : 0) pb1xx_battery_cover();
         //cube([25,6,18]);
     }
     //translate([0,0,-1]) cube([20,2,20]);
@@ -225,8 +227,7 @@ if ($preview) {
         translate([0,0,2.6]) color("pink", 0.6)
             pb1xx_battery_cover_case_preview();
     if (preview_battery)
-        translate([0,0.55,2.6]) color("white", 0.3)
-            pb1xx_battery_cover_battery_preview();
+        translate([0,0.55,2.6]) color("white", 0.3) pb1xx_battery_cover_battery_preview();
 }
 
 
