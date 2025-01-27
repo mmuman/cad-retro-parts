@@ -4,7 +4,7 @@
 /* [Printing options] */
 
 // Variant
-variant = 0; // [0:Original Metal Bracket,1:HDD 3D-printable, 2:PB BlueSCSI v2 3D-printable]
+variant = 0; // [0:Original Metal Bracket - FOR REFERENCE,1:HDD 3D-printable - UNTESTED, 2:PB BlueSCSI v2 3D-printable]
 
 // Optimize for FDM printers (less supports, larger details)
 optimize_fdm = true;
@@ -20,6 +20,7 @@ module pb5xx_hdd_caddy(variant=variant) {
     // metal thickness
     th = 1.0;
     slim = (variant == 2);
+    slim_shave = 2.5;
 
     module hdd_screws(c=0) {
         for (dx=[0,1],dy=[0,1]) {
@@ -32,23 +33,27 @@ module pb5xx_hdd_caddy(variant=variant) {
 
     module caddy_screws(c=0) {
         for (dx=[0,1]) {
-            translate([12.6-3.5-3/2+dx*60,1.8+3/2,-0.1]) {
-                cylinder(d=7,h=3.5+0.1);
+            translate([12.6-3.5-3/2+dx*59,1.8+3/2,-0.1]) {
+                cylinder(d=6+dx+c,h=3.5+0.1);
                 // one is thicker for some reason
-                cylinder(d=3+dx*0.5,h=10);
+                cylinder(d=3+dx*0.5+c,h=10);
+                // limit need for support
+                if (optimize_fdm && variant > 0)
+                    translate([0,0,3.4]) cylinder(d1=7,d2=3,h=0.6);
             }
         }
     }
 
     module BS_screws(c=0,post=true) {
         for (d=[[35,0],[4.7,14],[48.8,48.6]])
-            translate([8.3+d.x,27.5+d.y,4.5]) difference() {
+            translate([8.3+d.x,37.5+d.y,4.5]) difference() {
                 cylinder(d=4.9, h=4.7);
-                cylinder(d=2.85, h=5);
+                //cylinder(d=2.85, h=5);
+                cylinder(d=1.8, h=5);
             }
     }
 
-    color(variant?"DodgerBlue":"silver") translate([0,0,(slim && !$preview)?-2:0])
+    color(variant?"DodgerBlue":"silver") translate([0,0,(slim && !$preview)?-slim_shave:0])
         difference() {
             union() {
                 if (variant) {
@@ -63,7 +68,7 @@ module pb5xx_hdd_caddy(variant=variant) {
                     if (variant == 2) {
                         BS_screws(post=true);
                         for (d=[[3.6,44.2],[43.6,44.2]])
-                            translate([8.3+d.x,27.5+d.y,4.5]) cylinder(d = 4, h = 4.7);
+                            translate([8.3+d.x,37.5+d.y,4.5]) cylinder(d = 4, h = 4.7);
                      }
                     // the 3 prongs
                     for (dx=[0:2]) {
@@ -96,7 +101,7 @@ module pb5xx_hdd_caddy(variant=variant) {
                 translate([12.6,-1,i*2-0.1]) hull() {
                     cube([48,10+1,20]);
                     for (dx=[0,1])
-                        translate([5+dx*38,10+1,0]) cylinder(d=10+i*6, h=20);
+                        translate([5+dx*38,10+1+i*variant*4,0]) cylinder(d=10+i*6, h=20);
                 }
             }
             // large hole in the middle
@@ -104,14 +109,19 @@ module pb5xx_hdd_caddy(variant=variant) {
                 if (variant < 1)
                     cube([40.3,60.1,20]);
                 else {
-                    cube([40.3,37,20]);
-                    translate([0,48,0]) cube([40.3,20,20]);
+                    translate([0,10,0]) cube([40.3,37,20]);
+                    translate([0,60,0]) cube([40.3,10,20]);
                 }
                 if (!variant) for (dx = [0,1]) hull() {
                     for (dy = [0,1])
                         translate([0.8+dx*38.5,-1.5+dy*63,0]) cylinder(d=2,h=20);
                 }
             }
+            if (variant == 2)
+                for(dx = [0,1])
+                    hull()
+                        for(dy = [0,1])
+                            translate([dx*72, 35+dy*55, -1]) cylinder(d=15, h=20);
             // minor cutouts
             translate([1.2,-3,-0.1]) rotate([0,0,30]) cube([4,12,20]);
             translate([-0.1,108.5,-0.1]) cube([8.4,10,20]);
@@ -124,14 +134,19 @@ module pb5xx_hdd_caddy(variant=variant) {
             //translate([0,108.5,-0.1]) cube([50,4.6,3.5+0.1]);
             translate([0,112,0]) rotate([0,90,0]) cylinder(d=7,h=50,$fs=0.2);
 
+            // room for the keyboard
+            translate([59+2,7+55,-0.1]) linear_extrude(3.5+0.1,scale=[0.4,0.99]) square([4, 110], center=true);
+            translate([12.6-3.5-3/2+59,1.8+3/2,-0.1])
+                cylinder(d1=8,d2=7,h=3.5+0.1);
+
             if (slim)
-                translate([-1, -1, -1]) cube([75, 120, 2+1]);
+                translate([-1, -1, -1]) cube([75, 120, slim_shave+1]);
 
             // 4 HDD screws
             if (variant < 2)
                 hdd_screws();
             // 2 screws for the caddy itself
-            caddy_screws();
+            caddy_screws(c=0.1);
         }
 
     if ($preview && preview_parts) {
