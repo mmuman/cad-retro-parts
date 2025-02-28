@@ -12,6 +12,10 @@ back_cutout = true;
 
 insertion_margin = 0.2;
 
+export_svg = true;
+
+radius = 18;
+
 /*[Preview]*/
 
 preview_base_color = "CadetBlue"; // ["Silver","CadetBlue"]
@@ -23,7 +27,7 @@ preview_inside_cut = false;
 /*[Hidden]*/
 
 // x, y, z, radius, thickness, back cut width, back cut height
-G4_bbox = [ 196.85, 196.85, 249, 20, 4.3, 136, 60 ];
+G4_bbox = [ 196.85, 196.85, 249, radius, 4.3, 136, 60 ];
 
 $fa = $preview ? $fa : 0.5;
 
@@ -119,7 +123,10 @@ module G4_base(h = 10, th = 5) {
 difference() {
     union() {
 
-        color(preview_base_color) G4_base(h = base_height, th = base_thickness);
+        if (export_svg)
+            projection() G4_base(h = base_height, th = base_thickness);
+        else
+            color(preview_base_color) G4_base(h = base_height, th = base_thickness);
     }
     if ($preview && preview_inside_cut)
         translate([0,0,-1]) cube([G4_bbox.x,G4_bbox.y,G4_bbox.z]);
