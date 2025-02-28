@@ -12,9 +12,9 @@ back_cutout = true;
 
 insertion_margin = 0.2;
 
-export_svg = true;
+export_svg = false;
 
-radius = 18;
+radius = 17.5;
 
 /*[Preview]*/
 
