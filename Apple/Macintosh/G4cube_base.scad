@@ -12,10 +12,6 @@ back_cutout = true;
 
 insertion_margin = 0.2;
 
-export_svg = false;
-
-radius = 17.5;
-
 /*[Preview]*/
 
 preview_base_color = "CadetBlue"; // ["Silver","CadetBlue"]
@@ -26,8 +22,10 @@ preview_inside_cut = false;
 
 /*[Hidden]*/
 
+export_svg = false;
+
 // x, y, z, radius, thickness, back cut width, back cut height
-G4_bbox = [ 196.85, 196.85, 249, radius, 4.3, 136, 60 ];
+G4_bbox = [ 196.85, 196.85, 249, 17.5, 4.3, 136, 60 ];
 
 $fa = $preview ? $fa : 0.5;
 
