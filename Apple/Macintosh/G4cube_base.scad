@@ -98,7 +98,7 @@ module G4_base(h = 10, th = 5) {
         translate([0,0,-1]) {
             intersection() {
                 union() {
-                    linear_extrude(h*0.35) difference() {
+                    linear_extrude(h*0.351) difference() {
                         G4_outline(delta = (strip_w-G4_bbox[4])/2);
                         G4_outline(delta = -G4_bbox[4] - (strip_w-G4_bbox[4])/2);
                     }
@@ -130,4 +130,4 @@ difference() {
         translate([0,0,-1]) cube([G4_bbox.x,G4_bbox.y,G4_bbox.z]);
 }
 if ($preview && preview_cube)
-    translate([0,0,10*0.75]) G4();
+    translate([0,0,base_height*0.75]) G4();
