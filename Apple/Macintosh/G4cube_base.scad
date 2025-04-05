@@ -2,6 +2,11 @@
 // Idea by Xodium
 // Copyright François Revol, 2025
 
+/*[Variant]*/
+
+// Case model
+variant = 0; // [0:G4 Cube,1:Aftermarket G4 case 1]
+
 /*[Parameters]*/
 
 base_height = 10; // [4:20]
@@ -20,12 +25,17 @@ preview_cube = true;
 
 preview_inside_cut = false;
 
-/*[Hidden]*/
+/*[DEBUG]*/
 
 export_svg = false;
 
 // x, y, z, radius, thickness, back cut width, back cut height
-G4_bbox = [ 196.85, 196.85, 249, 17.5, 4.3, 136, 60 ];
+G4_variants_bbox = [
+    [ 196.85, 196.85, 249, 17.5, 4.3, 136, 60 ], // original G4 case
+    [ 8.5*2.54*10, 8.5*2.54*10, 249, 17.5, 4.3, 136, 60 ] // aftermarket
+];
+
+G4_bbox = G4_variants_bbox[variant];
 
 $fa = $preview ? $fa : 0.5;
 
@@ -45,7 +55,7 @@ module G4_xy() {
 }
 
 module G4_back_cutout(delta = 0) {
-    rotate([-90,0,0]) linear_extrude(120) hull() {
+    rotate([-90,0,0]) linear_extrude(200) hull() {
         for(dx=[-1,1], dy=[-1,1])
             translate([dx*(G4_bbox[5]/2-G4_bbox[3]+delta),dy*(G4_bbox[6]-G4_bbox[3])])
                 circle(r = G4_bbox[3]);
