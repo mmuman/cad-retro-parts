@@ -103,6 +103,11 @@ module rear_foot_stand(right=true,plastic=true, rubber=true) {
         h = inside ? 7.5 : 10.3;
         difference() {
             union() {
+                // a little extra thing to keep the TPU shell on
+                if (inside)
+                    translate([-2.5,7.9,0]) rotate([0,0,15])
+                        cube([1.5,0.8,h], center=true);
+                // the two main round parts
                 translate([-0.965,2,0]) difference() {
                     intersection() {
                         cylinder(r=inside?6.5:8,h=h, center=true,$fa=1);
@@ -214,5 +219,5 @@ for (r = [0,1]) {
             rear_foot_stand(right=r!=0, plastic=true, rubber=print_single_body);
     if ((print_rubber_parts && !print_single_body) && print_stands)
         translate([r?-15:-30,0,10.3/2+0*9.1]) rotate([0,0*-90,0])
-            rear_foot_stand(plastic=false, rubber=true);
+            rear_foot_stand(right=r!=0, plastic=false, rubber=true);
 }
