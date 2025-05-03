@@ -5,10 +5,14 @@
 
 print_single_body = false;
 
-print_plastic_part = true;
-print_rubber_part = true;
+print_plastic_parts = true;
+print_rubber_parts = true;
 
 print_washers = true;
+print_stands = true;
+
+// Leave holes in the washers to insert 6.8mm long wires cut from 0.9mm thick paperclips, which should be sturdier.
+option_washer_paperclip_pin = true;
 
 // Variant
 //variant = 0; // [0:Original plain cover,1:MicroSD - UNIMPLEMENTED]
@@ -62,13 +66,17 @@ module rear_foot_washer_right(right=true) {
                 }
             }
             // little nub
-            translate([axis.x,axis.y,0]) intersection() {
+            if (!option_washer_paperclip_pin) translate([axis.x,axis.y,0]) intersection() {
                 rotate([0,0,180+40]) translate([-0.2,-5,4.3+2.5/2]) cube([2.4,5,2.5], center=true);
                 difference() {
                     cylinder(r=4.9, h=10);
                     cylinder(r=4.9-0.9, h=20, center=true);
                 }
             }
+        }
+        // little nub
+        if (option_washer_paperclip_pin) translate([axis.x,axis.y,0]) for(a=[-4,12]) {
+            rotate([0,0,40-a]) translate([0,4.4,0]) cylinder(d=0.9+0.1, h=20, center=true);
         }
         translate(axis+[0,0,-0.1]) cylinder(d=5.9, h=5);
         // 2 indents inside
@@ -82,6 +90,10 @@ module rear_foot_washer_right(right=true) {
     }
     // DEBUG: bbox
     //if ($preview) color("green", 0.2) cube(bbox);
+    // preview paperclip pins
+    if ($preview && option_washer_paperclip_pin) color("silver", 0.6) mirror([right?0:1,0,0]) translate([axis.x,axis.y,0]) for(a=[-4,12]) {
+        rotate([0,0,40-a]) translate([0,4.4,0]) cylinder(d=0.9, h=6.8);
+    }
 }
 
 module rear_foot_stand(right=true,plastic=true, rubber=true) {
@@ -194,13 +206,13 @@ module rear_foot_stand(right=true,plastic=true, rubber=true) {
 //translate([-10,30,0]) mirror([1,0,0]) rear_foot_washer_right(false);
 //rear_foot_stand(plastic=true, rubber=true);
 for (r = [0,1]) {
-    if ((print_plastic_part || print_single_body) && print_washers)
+    if ((print_plastic_parts || print_single_body) && print_washers)
         translate([12+r*2,-23,0])
             rear_foot_washer_right(right=r!=0);
-    if (print_plastic_part || print_single_body)
+    if ((print_plastic_parts || print_single_body) && print_stands)
         translate([r?26:0,0,print_single_body?10.3/2:7.5/2]) rotate([0,r*180,0])
             rear_foot_stand(right=r!=0, plastic=true, rubber=print_single_body);
-    if (print_rubber_part && !print_single_body)
+    if ((print_rubber_parts && !print_single_body) && print_stands)
         translate([r?-15:-30,0,10.3/2+0*9.1]) rotate([0,0*-90,0])
             rear_foot_stand(plastic=false, rubber=true);
 }
