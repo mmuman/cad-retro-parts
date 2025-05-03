@@ -1,4 +1,4 @@
-// PowerBook 5xx Modem port cover
+// PowerBook 5xx Rear feet
 // Copyright François Revol, 2025
 
 /* [Printing options] */
@@ -12,19 +12,10 @@ print_washers = true;
 print_stands = true;
 
 // Leave holes in the washers to insert 6.8mm long wires cut from 0.9mm thick paperclips, which should be sturdier.
-option_washer_paperclip_pin = true;
-
-// Variant
-//variant = 0; // [0:Original plain cover,1:MicroSD - UNIMPLEMENTED]
+option_washer_paperclip_pin = false;
 
 // Optimize for FDM printers (less supports, larger details) - UNIMPLEMENTED
 optimize_fdm = true;
-
-/* [Preview] */
-
-//preview_parts = true;
-
-
 
 /* [Hidden] */
 $fs = $preview ? 0.5 : 0.1;
@@ -36,6 +27,7 @@ module rear_foot_washer_right(right=true) {
     d1 = 5.9;
     axis = [bbox.x-2.5-d1/2,bbox.y-2.5-d1/2];
     a=95;
+    paperclip_angles = [-1,13];
 
     module base_shape() {
         intersection() {
@@ -48,7 +40,6 @@ module rear_foot_washer_right(right=true) {
         }
     }
     mirror([right?0:1,0,0]) difference() {
-        //linear_extrude(4.4, scale=)
         union() {
             hull() {
                 linear_extrude(0.1) offset(r=-0.1) base_shape();
@@ -75,8 +66,8 @@ module rear_foot_washer_right(right=true) {
             }
         }
         // little nub
-        if (option_washer_paperclip_pin) translate([axis.x,axis.y,0]) for(a=[-4,12]) {
-            rotate([0,0,40-a]) translate([0,4.4,0]) cylinder(d=0.9+0.1, h=20, center=true);
+        if (option_washer_paperclip_pin) translate([axis.x,axis.y,0]) for(a=paperclip_angles) {
+            rotate([0,0,40-a]) translate([0,4.4,0]) cylinder(d=0.9+0.2, h=20, center=true);
         }
         translate(axis+[0,0,-0.1]) cylinder(d=5.9, h=5);
         // 2 indents inside
@@ -91,7 +82,7 @@ module rear_foot_washer_right(right=true) {
     // DEBUG: bbox
     //if ($preview) color("green", 0.2) cube(bbox);
     // preview paperclip pins
-    if ($preview && option_washer_paperclip_pin) color("silver", 0.6) mirror([right?0:1,0,0]) translate([axis.x,axis.y,0]) for(a=[-4,12]) {
+    if ($preview && option_washer_paperclip_pin) color("silver", 0.6) mirror([right?0:1,0,0]) translate([axis.x,axis.y,0]) for(a=paperclip_angles) {
         rotate([0,0,40-a]) translate([0,4.4,0]) cylinder(d=0.9, h=6.8);
     }
 }
