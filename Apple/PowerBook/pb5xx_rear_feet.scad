@@ -8,6 +8,8 @@ print_single_body = false;
 print_plastic_part = true;
 print_rubber_part = true;
 
+print_washers = true;
+
 // Variant
 //variant = 0; // [0:Original plain cover,1:MicroSD - UNIMPLEMENTED]
 
@@ -82,7 +84,7 @@ module rear_foot_washer_right(right=true) {
     //if ($preview) color("green", 0.2) cube(bbox);
 }
 
-module rear_foot_stand(plastic=true, rubber=true) {
+module rear_foot_stand(right=true,plastic=true, rubber=true) {
     bbox=[15.2,35.6,10.4];
 
     module foot_shell(inside = true) {
@@ -128,6 +130,10 @@ module rear_foot_stand(plastic=true, rubber=true) {
                 difference() {
                     translate([-6.2/2,-7,0]) cube([6.2,18,3], center=true);
                     translate([10/2,-16,0]) cylinder(d=21,h=10,center=true);
+                    // Identify which side this goes on.
+                    // The part is symmetrical but since we have supports on one side,
+                    // we want to use the other side in contact with the washer.
+                    translate([-4.5,-7,(right?-1:1)*(3/2-0.3)]) rotate([0,right?180:0,0]) linear_extrude(0.6) text(right?"R":"L", size=2.8, halign="center", valign="center");
                 }
                 // not exact but well…
                 translate([10/2,-16,0]) rotate([0,0,110]) rotate_extrude(angle=70/*,scale=[10,1]*/) translate([10.5,0,0]) scale([0.2,1])circle(d=3);
@@ -188,12 +194,12 @@ module rear_foot_stand(plastic=true, rubber=true) {
 //translate([-10,30,0]) mirror([1,0,0]) rear_foot_washer_right(false);
 //rear_foot_stand(plastic=true, rubber=true);
 for (r = [0,1]) {
-    if (print_plastic_part || print_single_body)
-        translate([2+r*4,12,0])
+    if ((print_plastic_part || print_single_body) && print_washers)
+        translate([12+r*2,-23,0])
             rear_foot_washer_right(right=r!=0);
     if (print_plastic_part || print_single_body)
-        translate([r?5:0,r*-18,print_single_body?10.3/2:7.5/2]) rotate([0,0,r*180])
-            rear_foot_stand(plastic=true, rubber=print_single_body);
+        translate([r?26:0,0,print_single_body?10.3/2:7.5/2]) rotate([0,r*180,0])
+            rear_foot_stand(right=r!=0, plastic=true, rubber=print_single_body);
     if (print_rubber_part && !print_single_body)
         translate([r?-15:-30,0,10.3/2+0*9.1]) rotate([0,0*-90,0])
             rear_foot_stand(plastic=false, rubber=true);
