@@ -145,7 +145,7 @@ module rear_foot_stand(right=true,plastic=true, rubber=true) {
                     // Identify which side this goes on.
                     // The part is symmetrical but since we have supports on one side,
                     // we want to use the other side in contact with the washer.
-                    translate([-4.5,-7,(right?-1:1)*(3/2-0.3)]) rotate([0,right?180:0,0]) linear_extrude(0.6) text(right?"R":"L", size=2.8, halign="center", valign="center");
+                    translate([-4.5,-7.5,(right?-1:1)*(3/2-0.3)]) rotate([0,right?180:0,0]) linear_extrude(0.6) text(right?"R":"L", size=2.8, halign="center", valign="center");
                 }
                 // not exact but well…
                 translate([10/2,-16,0]) rotate([0,0,110]) rotate_extrude(angle=70/*,scale=[10,1]*/) translate([10.5,0,0]) scale([0.2,1])circle(d=3);
