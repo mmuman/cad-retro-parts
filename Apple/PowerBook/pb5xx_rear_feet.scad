@@ -103,9 +103,9 @@ module rear_foot_stand(right=true,plastic=true, rubber=true) {
         h = inside ? 7.5 : 10.3;
         difference() {
             union() {
-                translate([-1,2,0]) difference() {
+                translate([-0.965,2,0]) difference() {
                     intersection() {
-                        cylinder(r=inside?6.5:8,h=h, center=true);
+                        cylinder(r=inside?6.5:8,h=h, center=true,$fa=1);
                         translate([-12/2-(inside?2:0),12/2,0]) cube(12, center=true);
                     }
                     translate([0,0,0]) cylinder(r=5,h=12, center=true);
