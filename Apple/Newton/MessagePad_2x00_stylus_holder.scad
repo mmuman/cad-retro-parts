@@ -47,6 +47,7 @@ module mp2x00_stylus_holder() {
                     translate([4.5,4.5]) circle(r=1.5);
                 }
             }
+            translate([0,1.35/2-bbox.y/2,0]) linear_extrude(3) square([5.9,1.35], center=true);
             //translate([-6,bbox.y/2-2,3.9/2]) cube(3.9, center=true);
             //translate([6,bbox.y/2-2,4.2/2]) cube(4.2, center=true);
         }
@@ -65,22 +66,22 @@ module mp2x00_stylus_holder() {
         }
         //if ($preview) cube(20);
     }
-    
+    //#translate([7.8,9.9/2-bbox.y/2]) square([2.4, 9.9], center=true);
     // the side clip
     linear_extrude(1.05) difference() {
         intersection() {
             translate([8,9.9/2-bbox.y/2]) square([4, 9.9], center=true);
             union() {
                 d1 = 50;
-                translate([7.7-d1/2,9.9/2-bbox.y/2]) circle(d=d1, $fn=100);
-                translate([6.6,9.9/2-bbox.y/2]) circle(d=3);
+                translate([8.5-d1/2,9.9/2-bbox.y/2]) circle(d=d1, $fn=100);
+                translate([7.6,9.9/2-bbox.y/2]) circle(d=3);
             }
         }
         intersection() {
             translate([8,9.9/2-bbox.y/2]) square([4, 7.9], center=true);
             union() {
                 d1 = 50;
-                translate([7.7-0.6-d1/2,9.9/2-bbox.y/2]) circle(d=d1, $fn=100);
+                translate([8.5-0.6-d1/2,9.9/2-bbox.y/2]) circle(d=d1, $fn=100);
             }
         }
     }
