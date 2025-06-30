@@ -17,6 +17,7 @@ echo($fn);
 module base() {
     thickness = 3;
     feet = [[57.5,76],[65,-66.9]]; // 5.5
+    large_radius = 1500;
 
     module trapezoid(outer=true) {
         b1 = [75.3-10, -10+93];
@@ -36,9 +37,15 @@ module base() {
                     for (l = base_layers) {
                         echo (l);
                         translate([0,0,l[3][outer?0:1]]) linear_extrude(0.01) {
+                            // corners
                             for (dx=[-1,1], py=[0,1]) {
                                 echo (l[py]);
                                 translate([dx*l[py].x,l[py].y]) circle(r = l[2] - (outer?0:3));
+                            }
+                            // front/back radius
+                            for (py=[0,1]) intersection() {
+                                translate([0,l[py].y+2*(py-0.5)*(large_radius-1.8-l[2])]) circle(r=large_radius- (outer?0:3), $fn=360);
+                                translate([0,-(py-0.5)*100]) square([2*(l[py].x+0*l[2]- (outer?0:3)),100], center=true);
                             }
                         }
                     }
@@ -77,6 +84,8 @@ module base() {
         }
         if ($preview) cube(80);
     }
+    // bbox
+    //if ($preview) translate([0,5,0]) %cube([168,180,10], center=true);
 }
 
 
