@@ -5,6 +5,10 @@
 
 optimize_fdm = false;
 
+
+//TODO
+rubber_feet_h = 6.5; // [5,6.5]
+
 ball_radius = 80;
 
 //$fs=0.5;
@@ -18,12 +22,12 @@ module base() {
     thickness = 3;
     feet = [[57.5,76],[65,-66.9]]; // 5.5
     large_radius = 1500;
+    ad1 = 26; // bracket attachment
 
     module trapezoid(outer=true) {
         b1 = [75.3-10, -10+93];
         b2 = [168/2-10, -83+10];
         base_layers = [
-            // TODO: front and back are large circles, about 1.5m radius
             // max y 178.5
             //y @x=55 =177
             [b1, b2, 10, [0,-0.1]],
@@ -54,8 +58,8 @@ module base() {
         }
     }
     // DEBUG
-    translate([0,-5,0]) #cube([1,178.5,40], center=true);
-    translate([55,-5,0]) #cube([1,177,40], center=true);
+    //translate([0,-5,0]) #cube([1,178.5,40], center=true);
+    //translate([55,-5,0]) #cube([1,177,40], center=true);
 
     difference() {
         union() {
@@ -64,6 +68,10 @@ module base() {
                 if (!optimize_fdm)
                     trapezoid(false);
             }
+            // cylinder(d=110, h=);
+            translate([0,0,13]) cylinder(d1=110, d2=96, h=11);
+            //%translate([0,0,23]) cylinder(d=91, h=11);
+            //
             for (f = feet) {
                 for (dx = [-1,1]) {
                     intersection() {
@@ -73,6 +81,27 @@ module base() {
                     }
                 }
             }
+        }
+        // room for the ball
+        difference() {
+            translate([0,0,ball_radius+9.5]) sphere(r=ball_radius+0.3, $fs=$fs/10);
+            // bracket attachment
+            translate([0,0,8]) hull() {
+                // main tube
+                cylinder(d = 23, h = 11.5);
+                // screw posts
+                for (dy=[-1,1])
+                    translate([0,dy*ad1/2,0]) cylinder(r=4, h=11.5);
+            }
+        }
+        // negative volumes for bracket attachment
+        translate([0,0,8]) {
+            // main tube
+            cylinder(d = 19, h = 30, center=true);
+            // screw holes
+            for (dy=[-1,1])
+                translate([0,dy*ad1/2,1]) cylinder(d=3.1+0.3, h=12);
+            // TODO: screw threads
         }
         union() {
             for (f = feet) {
@@ -115,10 +144,12 @@ module ball() {
                 translate([0,0,32.5-ball_radius]) sphere(r=ball_radius-3, $fs=$fs/10);
             }
             union() {
-                cube([53.5,optimize_fdm?65:120,80], center=true);
-                translate([0,120/2-7.7/2-3.0,0]) cube([11.7,6,80], center=true);
-                if (!optimize_fdm) for(dx=[-1,1],dy=[-1,1])
-                    translate([dx*(53.5+1.2+40)/2,dy*(60+1.1)/2,0]) cube([40,60,80], center=true);
+                cube([53.5,optimize_fdm?70:120,80], center=true);
+                if (!optimize_fdm) {
+                    //translate([0,120/2-7.7/2-3.0,0]) cube([11.7,6,80], center=true);
+                    for(dx=[-1,1],dy=[-1,1])
+                        translate([dx*(53.5+1.2+40)/2,dy*(60+1.1)/2,0]) cube([40,60,80], center=true);
+                }
             }
         }
         if (!optimize_fdm) translate([0,120/2-7.7/2-2.8,0]) cube([11.7,6,80], center=true);
@@ -150,17 +181,17 @@ module ball() {
         */}
     }
     // back clip
-    translate([0,120/2-7.7/2-0.4,-6.6]) {
+    translate([0,120/2-7.7/2-0.4,-6.4]) {
         linear_extrude(1.3) square([9.9,7.7], center=true);
         translate([0,0,1.3]) linear_extrude(1.3, scale=[1,0.7]) square([9.9,7.7], center=true);
         translate([0,(7.7-3)/2,0]) linear_extrude(7) square([9.9,3], center=true);
     }
     // front clips
-    for (dx=[-1,1]) translate([dx*40,-60.6,-6.3]) {
-        linear_extrude(2.0) translate([0,-10/2]) square([10,10], center=true);
-        translate([0,0,2]) linear_extrude(0.4, scale=[1,0.95]) translate([0,-10/2,2.4]) square([10,10], center=true);
-        translate([0,0,2.4]) linear_extrude(1, scale=[1,0.1]) translate([0,-(10-0.5)/2,2.4]) square([10,10-0.5], center=true);
-        linear_extrude(7) translate([0,-3.4/2]) square([10,3.4], center=true);
+    for (dx=[-1,1]) translate([dx*40,-60.6,-6.0]) {
+        linear_extrude(2.0) translate([0,-10/2]) square([9.9,10], center=true);
+        translate([0,0,2]) linear_extrude(0.4, scale=[1,0.95]) translate([0,-10/2,2.4]) square([9.9,10], center=true);
+        translate([0,0,2.4]) linear_extrude(1, scale=[1,0.1]) translate([0,-(10-0.5)/2,2.4]) square([9.9,10-0.5], center=true);
+        linear_extrude(7) translate([0,-3.4/2]) square([9.9,3.4], center=true);
     }
 
     // bounding boxes
@@ -212,7 +243,7 @@ module bracket() {
 
 base();
 
-translate($preview ? [0,0,80] : [-150,0,6.3]) rotate($preview?[0,180,0]:[0,0,0])
+translate($preview ? [0,0,80] : [-150,0,6.4]) rotate($preview?[0,180,0]:[0,0,0])
     ball();
 
 //translate($preview ? [0,0,80] : [110,0,0]) rotate($preview?[180,0,0]:[0,0,0]) bracket();
