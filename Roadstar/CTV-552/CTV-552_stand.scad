@@ -7,7 +7,7 @@ optimize_fdm = false;
 
 
 //TODO
-rubber_feet_h = 6.5; // [5,6.5]
+rubber_feet_h = 6.5; // [5: Replacement rubber feet 5mm x 20mm,6.5:Original rubber feet 6.5mm x 20mm]
 
 ball_radius = 80;
 
@@ -100,13 +100,16 @@ module base() {
             cylinder(d = 19, h = 30, center=true);
             // screw holes
             for (dy=[-1,1])
-                translate([0,dy*ad1/2,1]) cylinder(d=3.1+0.3, h=12);
+                if (optimize_fdm)
+                    translate([0,dy*ad1/2,1]) cylinder(d=2.5+0.2, h=25, center=true);
+                else
+                    translate([0,dy*ad1/2,1]) cylinder(d=2.5+0.2, h=12);//original
             // TODO: screw threads
         }
         union() {
             for (f = feet) {
                 for (dx = [-1,1]) {
-                    translate([f.x*dx,f.y,-1]) cylinder(d = 19.8, h = 5.5+1);
+                    translate([f.x*dx,f.y,-1]) cylinder(d = 19.8+0.2, h = rubber_feet_h);
                     translate([f.x*dx,f.y,-1]) cylinder(d = 4.8, h = 10);
                 }
             }
