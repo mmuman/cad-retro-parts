@@ -121,7 +121,8 @@ module base() {
             for (f = feet) {
                 for (dx = [-1,1]) {
                     translate([f.x*dx,f.y,-1]) cylinder(d = 19.8+0.2, h = rubber_feet_h);
-                    translate([f.x*dx,f.y,-1]) cylinder(d = 4.8, h = 10);
+                    if (!optimize_fdm)
+                        translate([f.x*dx,f.y,-1]) cylinder(d = 4.8, h = 10);
                 }
             }
         }
