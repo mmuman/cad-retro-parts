@@ -6,7 +6,7 @@
 optimize_fdm = false;
 
 
-rubber_feet_h = 6.5; // [5: Replacement rubber feet 5mm x 20mm,6.5:Original rubber feet 6.5mm x 20mm]
+rubber_feet_h = 6.5; // [5: Replacement rubber feet 5mm x 20mm - ex. 3M Bumpons SJ 5780,6.5:Original rubber feet 6.5mm x 20mm]
 
 
 // UNIMPLEMENTED
