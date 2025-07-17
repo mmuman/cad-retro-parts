@@ -6,8 +6,11 @@
 optimize_fdm = false;
 
 
-//TODO
 rubber_feet_h = 6.5; // [5: Replacement rubber feet 5mm x 20mm,6.5:Original rubber feet 6.5mm x 20mm]
+
+
+// UNIMPLEMENTED
+base_radius = 0;
 
 ball_radius = 80;
 
@@ -35,26 +38,31 @@ module base() {
             [b1+[-18, -18], b2+[-18,18], 8, [13,9.4]]
         ];
         heights = outer ? [0,2,4] : [-0.1,2,3];
-        difference() {
-            union() {
-                hull() {
-                    for (l = base_layers) {
-                        echo (l);
-                        translate([0,0,l[3][outer?0:1]]) linear_extrude(0.01) {
-                            // corners
-                            for (dx=[-1,1], py=[0,1]) {
-                                echo (l[py]);
-                                translate([dx*l[py].x,l[py].y]) circle(r = l[2] - (outer?0:3));
-                            }
-                            // front/back radius
-                            for (py=[0,1]) intersection() {
-                                translate([0,l[py].y+2*(py-0.5)*(large_radius-1.8-l[2])]) circle(r=large_radius- (outer?0:3), $fn=360);
-                                translate([0,-(py-0.5)*100]) square([2*(l[py].x+0*l[2]- (outer?0:3)),100], center=true);
+        union() {//minkowski() {
+            //difference() {
+                union() {
+                    hull() {
+                        for (l = base_layers) {
+                            echo (l);
+                            tz = l[3][outer?0:1];// - (outer ? base_radius - 0.1 : 0);
+                            translate([0,0,tz]) linear_extrude(0.01) {
+                                // corners
+                                for (dx=[-1,1], py=[0,1]) {
+                                    echo (l[py]);
+                                    translate([dx*l[py].x,l[py].y]) circle(r = l[2] - (outer?base_radius:3));
+                                }
+                                // front/back radius
+                                for (py=[0,1]) intersection() {
+                                    translate([0,l[py].y+2*(py-0.5)*(large_radius-1.8-l[2])]) circle(r=large_radius- (outer?base_radius:3), $fn=360);
+                                    translate([0,-(py-0.5)*100]) square([2*(l[py].x+0*l[2]- (outer?0:3)),100], center=true);
+                                }
                             }
                         }
                     }
                 }
-            }
+            //}
+            //if (outer)
+                //sphere(r=base_radius);
         }
     }
     // DEBUG
@@ -69,7 +77,10 @@ module base() {
                     trapezoid(false);
             }
             // cylinder(d=110, h=);
-            translate([0,0,13]) cylinder(d1=110, d2=96, h=11);
+            minkowski() {
+                translate([0,0,13]) cylinder(d1=110, d2=96, h=11);
+                sphere(r=base_radius);
+            }
             //%translate([0,0,23]) cylinder(d=91, h=11);
             //
             for (f = feet) {
