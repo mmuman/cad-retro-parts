@@ -1,13 +1,12 @@
 // Swivel stand for the Roadstar CTV-552
 // Copyright François Revol, 2025
 
-
-
+// Fill some volumes to limit supports, remove unneeded features.
 optimize_fdm = false;
-
 
 rubber_feet_h = 6.5; // [5: Replacement rubber feet 5mm x 20mm - ex. 3M Bumpons SJ 5780,6.5:Original rubber feet 6.5mm x 20mm]
 
+/* [Hidden] */
 
 // UNIMPLEMENTED
 base_radius = 0;
@@ -261,7 +260,8 @@ base();
 translate($preview ? [0,0,80] : [-150,0,6.4]) rotate($preview?[0,180,0]:[0,0,0])
     ball();
 
-//translate($preview ? [0,0,80] : [110,0,0]) rotate($preview?[180,0,0]:[0,0,0]) bracket();
+translate($preview ? [0,0,80] : [110,0,0]) rotate($preview?[180,0,0]:[0,0,0]) bracket();
+
 
 /*
 translate([0,0,50]) {
