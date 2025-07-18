@@ -250,7 +250,7 @@ module bracket() {
                             for(dy=[-1,1])
                                 translate([dx*(28.8/2+1),dy*(4.4-1),r1]) cylinder(r=1-r1, h=9);
                         }
-                        translate([0,0,10.5-ball_radius+3-r1]) sphere(r=ball_radius-3, $fs=$fs/10);
+                        translate([0,0,10.5-ball_radius+3-r1+(optimize_fdm?0.4:0)]) sphere(r=ball_radius-3, $fs=$fs/10);
                     }
                     sphere(r=r1);
                 }
