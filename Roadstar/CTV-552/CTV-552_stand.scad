@@ -6,6 +6,10 @@ optimize_fdm = false;
 
 rubber_feet_h = 6.5; // [5: Replacement rubber feet 5mm x 20mm - ex. 3M Bumpons SJ 5780,6.5:Original rubber feet 6.5mm x 20mm]
 
+print_base = true;
+print_ball = true;
+print_bracket = true;
+
 /* [Hidden] */
 
 // UNIMPLEMENTED
@@ -255,12 +259,12 @@ module bracket() {
     if ($preview) color("yellow", 0.2) translate([0,0,8.8/2]) cube([48,34,8.8], center=true);
 }
 
-base();
+if (print_base) base();
 
-translate($preview ? [0,0,80] : [-150,0,6.4]) rotate($preview?[0,180,0]:[0,0,0])
+if (print_ball) translate($preview ? [0,0,80] : [-150,0,6.4]) rotate($preview?[0,180,0]:[0,0,0])
     ball();
 
-translate($preview ? [0,0,80] : [110,0,0]) rotate($preview?[180,0,0]:[0,0,0]) bracket();
+if (print_bracket) translate($preview ? [0,0,80] : [110,0,0]) rotate($preview?[180,0,0]:[0,0,0]) bracket();
 
 
 /*
