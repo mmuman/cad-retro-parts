@@ -154,11 +154,24 @@ module ball() {
                  translate([0,14/2,0]) linear_extrude(4.5) square([8,14], center=true);
                  translate([0,14,3]) linear_extrude(1.5, scale=[1,0]) square([8,12], center=true);
             }
+            // back clip
+            translate([0,120/2-7.7/2-0.4,-6.4]) {
+                linear_extrude(1.3) square([9.9,7.7], center=true);
+                translate([0,0,1.3]) linear_extrude(1.3, scale=[1,0.7]) square([9.9,7.7], center=true);
+                translate([0,(7.7-3)/2,0]) linear_extrude(7) square([9.9,3], center=true);
+            }
+            // front clips
+            for (dx=[-1,1]) translate([dx*40,-60.6,-6.0]) {
+                linear_extrude(2.0) translate([0,-10/2]) square([9.9,10], center=true);
+                translate([0,0,2]) linear_extrude(0.4, scale=[1,0.95]) translate([0,-10/2,2.4]) square([9.9,10], center=true);
+                translate([0,0,2.4]) linear_extrude(1, scale=[1,0.1]) translate([0,-(10-0.5)/2,2.4]) square([9.9,10-0.5], center=true);
+                linear_extrude(7) translate([0,-3.4/2]) square([9.9,3.4], center=true);
+            }
         }
         intersection() {
             intersection() {
                 //cylinder(d=113, h=4.5*2, center=true);
-                cylinder(d=113, h=80, center=true, $fs=$fs/10);
+                translate([0,0,-1]) cylinder(d=113, h=80, $fs=$fs/10);
                 translate([0,0,32.5-ball_radius]) sphere(r=ball_radius-3, $fs=$fs/10);
             }
             union() {
@@ -170,7 +183,7 @@ module ball() {
                 }
             }
         }
-        if (!optimize_fdm) translate([0,120/2-7.7/2-2.8,0]) cube([11.7,6,80], center=true);
+        if (!optimize_fdm) translate([0,120/2-7.7/2-2.8,8]) cube([11.7,6,20], center=true);
         if ($preview) cube(100);
         minkowski() {
             r1 = 3;
@@ -197,19 +210,13 @@ module ball() {
              translate([0,14/2,0]) linear_extrude(4.5) square([8,14], center=true);
              translate([0,14,3]) linear_extrude(1.5, scale=[1,0]) square([8,12], center=true);
         */}
-    }
-    // back clip
-    translate([0,120/2-7.7/2-0.4,-6.4]) {
-        linear_extrude(1.3) square([9.9,7.7], center=true);
-        translate([0,0,1.3]) linear_extrude(1.3, scale=[1,0.7]) square([9.9,7.7], center=true);
-        translate([0,(7.7-3)/2,0]) linear_extrude(7) square([9.9,3], center=true);
-    }
-    // front clips
-    for (dx=[-1,1]) translate([dx*40,-60.6,-6.0]) {
-        linear_extrude(2.0) translate([0,-10/2]) square([9.9,10], center=true);
-        translate([0,0,2]) linear_extrude(0.4, scale=[1,0.95]) translate([0,-10/2,2.4]) square([9.9,10], center=true);
-        translate([0,0,2.4]) linear_extrude(1, scale=[1,0.1]) translate([0,-(10-0.5)/2,2.4]) square([9.9,10-0.5], center=true);
-        linear_extrude(7) translate([0,-3.4/2]) square([9.9,3.4], center=true);
+        if (optimize_fdm) {
+            for (dx=[-1,1]) {
+                translate([dx*1.5,120/2-2,-2]) cylinder(d=0.8,h=12, center=true);
+                for(ddx=[-1,1])
+                    translate([ddx*40+dx*1.5,-62.25,-2])  cylinder(d=0.8,h=9, center=true);
+            }
+        }
     }
 
     // bounding boxes
