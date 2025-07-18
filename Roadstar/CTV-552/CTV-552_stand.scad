@@ -167,6 +167,12 @@ module ball() {
                 translate([0,0,2.4]) linear_extrude(1, scale=[1,0.1]) translate([0,-(10-0.5)/2,2.4]) square([9.9,10-0.5], center=true);
                 linear_extrude(7) translate([0,-3.4/2]) square([9.9,3.4], center=true);
             }
+            // This should block the display from sliding back if all the clips break.
+            if (optimize_fdm) difference() {
+                translate([0,2.5/2-56+10,-2.5]) linear_extrude(2.5, scale=[1,3]) square([99,2.4], center=true);
+                translate([0,2.5/2-56+10-2.5,-2.5]) linear_extrude(2.6) square([100,2.5], center=true);
+                translate([-7,2.5/2-56+10+0.25,-2.6]) linear_extrude(3.3, scale=[1,0.9]) square([60,3.3], center=true);
+            }
         }
         intersection() {
             intersection() {
