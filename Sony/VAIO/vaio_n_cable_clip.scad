@@ -58,7 +58,7 @@ module VAIO_N_cable_clip(cd = 3.4) {
             sphere(r=radius);
         }
         //
-        translate([bbox.x/2,0,(bbox.z-logo_w)/2]) rotate([-90,-90,90+1]) linear_extrude(1) scale(0.0016*logo_w) import("Vaio.svg");
+        translate([bbox.x/2-0.9,-1,(bbox.z-logo_w)/2]) rotate([90,-90,90+1]) linear_extrude(1) scale(0.0016*logo_w) import("Vaio.svg");
     }
     if ($preview)
         color("white", 0.2) translate([0,0,bbox.z/2]) cube(bbox, center=true);
