@@ -43,6 +43,9 @@ print_count_x = 1;
 // Only works for single variant!
 print_count_y = 1;
 
+// Print upside-down. The plate texture on top should help with reading the label
+print_upsidedown = false;
+
 // UNIMPLEMENTED - Make the roof smaller, should only be required if not printing top-down
 optimize_fdm = true;
 
@@ -72,6 +75,8 @@ preview_variants = [ // -1 and down:
 module IDC_port_cover(pins = 20, rows = 2, key=true, label="", label_flipped=false) {
     bbox = [(pins/rows)*2.54+4.7,rows*2.54+0.9,7];
 
+    translate([0,0,(!$preview && print_upsidedown)?(bbox.z+3):0])
+    rotate([(!$preview && print_upsidedown)?180:0,0,0])
     difference() {
         union() {
             // main body
@@ -84,6 +89,8 @@ module IDC_port_cover(pins = 20, rows = 2, key=true, label="", label_flipped=fal
                 translate([dx*bbox.x/3,dy*bbox.y/2,1]) rotate([0,90,0]) cylinder(d=1,h=3.5, center=true);
             // polarizing key
             translate([0,-0.7-rows*2.54/2]) linear_extrude(6) square([3.8,2], center=true);
+            // avoid supports when printing upside-down
+            translate([0,-0.7-rows*2.54/2,6]) linear_extrude(1,scale=[0.7,0.25]) square([3.8,2], center=true);
         }
         // room for pins
         translate([0,0,-1]) linear_extrude(bbox.z) square([bbox.x-4,bbox.y-2.2], center=true);
@@ -122,7 +129,8 @@ for (v = variants) {
                     translate([0,0,-2.3]) box_header(2p54header, contact_count/rows, rows);
                     //if ($preview) cube(40);
                 }
-                color(preview_color, 0.8) IDC_port_cover(contact_count, rows, key, label, label_flipped);
+                color(preview_color, 0.8)
+                    IDC_port_cover(contact_count, rows, key, label, label_flipped);
             }
         }
     }
