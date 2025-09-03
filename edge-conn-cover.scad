@@ -23,6 +23,8 @@ variant_foot_radius = 0; // [0:1:30]
 // The $fn value for rounding
 variant_foot_radius_faces = 0; // [0:Round,4:Octagon,8,10]
 
+option_print_label = true;
+
 /* [Custom: only for "Custom size" variant] */
 
 // Number of contacts per PCB face
@@ -36,6 +38,8 @@ custom_pcb_thickness = 1.6;
 
 // Total height
 custom_total_height = 15.5;
+
+custom_label = "Label";
 
 // Material color (only for preview, X11 color name)
 custom_preview_color = "Blue";
@@ -73,21 +77,21 @@ $fs=0.1;
 
 
 definitions = [
-    // [contact_count, pitch, thickness, height, color]
-    [custom_face_contact_count, custom_pcb_pitch, custom_pcb_thickness, custom_total_height, custom_preview_color],
-    [19, 2.54, 1.6, 15.5, "DimGrey"], // MO5
-    [25, 2.54, 1.6, 15.5, "DarkGrey"], // Amstrad CPC Expansion
-    [17, 2.54, 1.6, 15.5, "DarkGrey"], // Amstrad CPC Printer
-    [17, 2.54, 1.6, 15.5, "DarkGrey"], // Amstrad CPC Drive 2 - same as printer
-    [12, 3.96, 1.6, 15.5, "Wheat"], // C64 User
-    [6, 3.96, 1.6, 15.5, "Wheat"], // C64 Cassette
+    // [contact_count, pitch, thickness, height, color, label]
+    [custom_face_contact_count, custom_pcb_pitch, custom_pcb_thickness, custom_total_height, custom_preview_color, custom_label],
+    [19, 2.54, 1.6, 15.5, "DimGrey", "MO5"], // MO5
+    [25, 2.54, 1.6, 15.5, "DarkGrey", "EXP"], // Amstrad CPC Expansion
+    [17, 2.54, 1.6, 15.5, "DarkGrey", "PRINTER"], // Amstrad CPC Printer
+    [17, 2.54, 1.6, 15.5, "DarkGrey", "DISK DRIVE"], // Amstrad CPC Drive 2 - same as printer
+    [12, 3.96, 1.6, 15.5, "Wheat", "USER PORT"], // C64 User
+    [6, 3.96, 1.6, 15.5, "Wheat", "CASSETTE"], // C64 Cassette
 // Matra Alice & TRS-80 MC-10 should have their own screwed port covers but added just in case
-    [18, 2.54, 1.6, 15.5, "Red"], // Matra Alice
-    [18, 2.54, 1.6, 15.5, "White"], // TRS-80 MC-10 = Matra Alice
-    [25, 2.54, 1.6, 15.5, "DarkGrey"], // Philips VG 5000
-    [17, 2.54, 1.6, 15.5, "DimGrey"], // Generic 2x17 - 5-1/4" Drive
-    [20, 2.54, 1.6, 15.5, "DimGrey"], // Generic 2x20
-    [22, 2.54, 1.6, 15.5, "Wheat"], // C64 Cartridge
+    [18, 2.54, 1.6, 15.5, "Red", ""], // Matra Alice
+    [18, 2.54, 1.6, 15.5, "White", ""], // TRS-80 MC-10 = Matra Alice
+    [25, 2.54, 1.6, 15.5, "DarkGrey", ""], // Philips VG 5000
+    [17, 2.54, 1.6, 15.5, "DimGrey", ""], // Generic 2x17 - 5-1/4" Drive
+    [20, 2.54, 1.6, 15.5, "DimGrey", ""], // Generic 2x20
+    [22, 2.54, 1.6, 15.5, "Wheat", ""], // C64 Cartridge
 ];
 
 preview_variants = [ // -1 and down:
@@ -97,7 +101,7 @@ preview_variants = [ // -1 and down:
     [5:6] // C64
 ];
 
-module edge_conn_cover(contacts = 19, pitch = 2.54, thickness = 1.6, height = 15.5) {
+module edge_conn_cover(contacts = 19, pitch = 2.54, thickness = 1.6, height = 15.5, label_text="") {
     extra_x = pitch == 2.54 ? 6.34 : 6.34 + 2;
     base_sz = [extra_x + contacts * pitch, 6.2 + thickness];
     top_sz = base_sz - [0.8, 0.8];
@@ -144,6 +148,10 @@ module edge_conn_cover(contacts = 19, pitch = 2.54, thickness = 1.6, height = 15
                         rotate([-dy * 45, 0, 0])
                             cube([base_sz.x - 10,1,1], center = true);
         }
+        // label
+        if (option_print_label)
+            translate([0,0,height-0.5]) rotate([0,0,/*label_flipped?180:*/0]) linear_extrude(1) text(label_text, size=4, halign="center", valign="center", font="Liberation Sans:style=Bold");
+
     }
     // Foot options
     if (variant_options > 9) {
@@ -206,6 +214,7 @@ for (v = variants) {
     pcb_thickness = defs[2];
     total_height = defs[3];
     preview_color = defs[4];
+    label_text = defs[5];
     do_rotate = print_top_down || (variant_options > 9);
     echo(do_rotate);
     
@@ -221,7 +230,7 @@ for (v = variants) {
             translate([-ix * (10 + face_contact_count * pcb_pitch), print_delta_y*(iy+v-1), do_rotate ? total_height : 0])
                 rotate([do_rotate ? 180 : 0,0,0])
                     difference() {
-                        color(preview_color, 0.8) edge_conn_cover(face_contact_count, pcb_pitch, pcb_thickness, total_height);
+                        color(preview_color, 0.8) edge_conn_cover(face_contact_count, pcb_pitch, pcb_thickness, total_height, label_text);
                         if (debug && $preview && iy == 0 && ix == 0) translate([10,0,0]) rotate([0,0,-90]) cube([100,100,100]);
                     }
         }
