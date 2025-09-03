@@ -58,6 +58,9 @@ print_top_down = false;
 // Make the roof smaller, should only be required if not printing top-down
 optimize_fdm = true;
 
+// When printing with TPU, try around -0.5
+thickness_adjust = 0.0; // [-1:0.1:1]
+
 /* [Hidden] */
 
 debug = true;
@@ -127,7 +130,7 @@ module edge_conn_cover(contacts = 19, pitch = 2.54, thickness = 1.6, height = 15
                             translate([sx * dx *
                              grip_dx, dy * (grip_diam + thickness - 0.1)/2, 0])
                                 difference() {
-                                    cylinder(d = 1.8, h = height-1);
+                                    cylinder(d = 1.8 - thickness_adjust, h = height-1);
                                     translate([0,0,-1.4])
                                         rotate([-dy * 60, 0, 0])
                                             cube([4,10,2], center = true);
