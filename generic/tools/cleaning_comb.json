@@ -1,0 +1,27 @@
+{
+    "parameterSets": {
+        "Mac LC top": {
+            "$fn": "20",
+            "depth": "2.2",
+            "handle_height": "20",
+            "label": "Mac LC top",
+            "pitch": "10",
+            "teeth": "6",
+            "thickness": "1",
+            "width": "1.8"
+        },
+        "Mac LC side": {
+            "$fn": "20",
+            "depth": "2.2",
+            "handle_height": "20",
+            "label": "Mac LC side",
+            "pitch": "10.5",
+            "teeth": "3",
+            "thickness": "1",
+            "width": "1.8"
+        }
+    },
+    "fileFormatVersion": "1",
+    "parameterSets": "",
+    "parameterSets": ""
+}
