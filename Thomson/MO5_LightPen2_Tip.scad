@@ -2,15 +2,17 @@
 // Copyright 2025, François Revol
 
 // TODO
-optimize_fdm = true;
+optimize_fdm = false;
 
 
 $fn = 60;
 
 module lightpen_tip() {
+    d1_extra = optimize_fdm ? 1 : 0;
+
     difference() {
         union() {
-            cylinder(d1=5.5, d2=7.5, h=5.9);
+            cylinder(d1=5.5+d1_extra, d2=7.5+d1_extra, h=5.9);
             translate([0,0,5.9]) cylinder(d=6.6, h=2);
             translate([0,0,7.9]) cylinder(d1=6.6, d2=5.5, h=1.1);
             translate([0,0,9]) cylinder(d=5.5, h=3.6);
