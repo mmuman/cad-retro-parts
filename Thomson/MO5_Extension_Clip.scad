@@ -4,6 +4,7 @@
 // I didn't have the original part to model it,
 // only the drawing from the user manual and the cases to measure.
 
+// Add one clip on each side for the MO5 vents, make them longer when possible
 optimize_fdm = true;
 
 difference() {
