@@ -5,7 +5,7 @@
 /*[Variant]*/
 
 // Case model
-variant = 0; // [0:G4 Cube,1:Aftermarket G4 case 1]
+variant = 0; // [0:G4 Cube,1:PowerLogix ClearCube]
 
 /*[Parameters]*/
 
