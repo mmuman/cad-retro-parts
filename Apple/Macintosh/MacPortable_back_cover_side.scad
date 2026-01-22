@@ -9,7 +9,9 @@ optimize_fdm = true;
 
 first_slot = 1; // [0:Nothing,1:Floppy,2:BlueSCSI Full SD - UNTESTED]
 
-second_slot = 0; // [0:Nothing,1:Floppy - UNTESTED,2:BlueSCSI Full SD]
+second_slot = 0; // [0:Nothing,1:Floppy - UNTESTED,2:BlueSCSI Full SD - UNTESTED]
+
+// TODO: BSCSI LED! (&only?)
 
 // [Hidden]
 //$fn=30;
@@ -43,37 +45,48 @@ module back_cover_side() {
     module clip2() {
         clip_r = 0.5;
         translate([0.3,28.2,3.3]) difference() {
-            cube([7,9,18]);
+            translate([1,0,-1]) cube([6,9,19]);
             translate([5/2-0.1,10/2-0.1,20/2+5.23-3.3]) difference() {
                 cube([5,10,20], center=true);
-                translate([5/2,0-1,18-10-5]) linear_extrude(5,scale=[0.2,1]) square([4,11], center=true);
+                translate([5/2,0-1,11.1-20/2]) linear_extrude(5,scale=[0.2,1]) square([4,11], center=true);
             }
             translate([7.3,10/2-0.3,optimize_fdm?10:0]) difference() {
                 rotate([0,0,-9]) linear_extrude(20/(optimize_fdm?2:1)) square([2,10], center=true);
             }
             if (optimize_fdm) {
                 // internal reinforcement
-                translate([5.8,8,0]) cylinder(d=0.5,h=17.9);
+                for (dy=[0:2])
+                    translate([5.8-dy/4,8-dy*2,-1]) cylinder(d=0.8,h=17.9);
             } else {
                 translate([6.1,0,0]) cube([2,10,10.5]);
                 translate([6.1,0,18-2-2.5]) cube([2,10,2]);
             }
+        }
+        if (optimize_fdm) {
+            translate([4.8,28.2+15.5,3.3]) difference() {
+                linear_extrude(21, scale=[0.2,1]) square([5,5]);
+                translate([3,2,9.5]) rotate([0,0,-30]) linear_extrude(8.5) square([3,10], center=true);
+                // internal reinforcement
+                translate([1,4,-1]) cylinder(d=0.8,h=18);
+            }
+            translate([4.8,28.2,18+3.3]) cube([1.0,9,3]);
+            translate([4.8,28.2,21+3.3]) cube([1.0,20.5,2]);
         }
     }
 
     module clip3() {
         clip_r = 0.5;
         translate([131,31.8,3.3]) difference() {
-            translate([-1,0,-1]) cube([7.5,7.9,16.7+1]);
+            translate([-1,0,-1]) linear_extrude(16.7+1) square([7.5,7.9]);
             translate([5/2-4-0.1,10/2-0.5,0]) rotate([0,0,10])
-                linear_extrude(17,scale=optimize_fdm?1.3:1) square([optimize_fdm?2.5:5,10], center=true);
+                linear_extrude(17,scale=optimize_fdm?1.3:1) square([optimize_fdm?3:5,10], center=true);
             translate([5.2/2+2-0.1,10/2-0.3,16.7/2+5.23-3.3]) rotate([0,0,180+10]) difference() {
                 cube([5.2,10,16.7], center=true);
-                translate([5/2,0-1,18-10-5]) linear_extrude(5,scale=[0.2,1]) square([4,11], center=true);
+                translate([5/2,0-1,11.2-16.7/2]) linear_extrude(5,scale=[0.2,1]) square([4,11], center=true);
             }
             // internal reinforcement
-            for (dy=(optimize_fdm?[-1,1]:[]))
-                translate([1-dy/2,4+2*dy,0]) cylinder(d=0.5,h=16.6);
+            for (dy=(optimize_fdm?[-1:1]:[]))
+                translate([1-dy/2,4+2*dy,-1]) cylinder(d=0.8,h=16.6+1);
         }
     }
 
@@ -100,7 +113,7 @@ module back_cover_side() {
     module opening_floppy(slot=0) {
         // No idea where it should be for slot 1.
         slot_delta = [0,slot*/*19.5*/27.4,0];
-        translate([27,-2.3,0]+slot_delta) linear_extrude(20,center=true) square([93, 6.3]);
+        translate([27,-2.3,0]+slot_delta) linear_extrude(20,center=true) square([95, 6.3]);
         // paperclip hole
         if (slot)
             translate([20+3.5/2,3.1-3.5/2,0]+slot_delta) cylinder(d=1.85, h=20, center=true);
@@ -168,8 +181,8 @@ module back_cover_side() {
         */
         translate([0,0,5.25-2.6]) difference() {
             hull() {
-                linear_extrude(0.1) offset(corner_r) offset(-1.9-corner_r) base_shape1(y=32);
-                translate([0,0,2.7]) linear_extrude(0.1) offset(corner_r) offset(-1.5-corner_r) base_shape1(y=32);
+                linear_extrude(0.1) offset(1.5) offset(delta=corner_r-1.5) offset(-1.6-corner_r) base_shape1(y=32);
+                translate([0,0,2.7]) linear_extrude(0.1) offset(1.5) offset(delta=corner_r-1.5) offset(-1.4-corner_r) base_shape1(y=32);
             }
             translate([0,0,-0.1]) linear_extrude(3) {
                 offset(-4.5) base_shape();
@@ -195,6 +208,7 @@ module back_cover_side() {
             if (s == 2)
                 opening_bluescsi_fsd(slot);
         }
+        //if ($preview) cube(30);
     }
 
     // part number
