@@ -7,6 +7,8 @@ optimize_fdm = true;
 
 preview_color = true;
 
+preview_modifier = false;
+
 // [Hidden]
 $fn=$preview ? 30 : 50;
 
@@ -57,9 +59,15 @@ module hinge_cover() {
                     translate([-dx*3,-1.6,3]) cube(6, center=true);
                 }
             }
+            if (optimize_fdm) for (dx=[-1,1]) {
+                translate([dx*7.7,4.0,21]) rotate([0,0,dx*0]) difference() {
+                    cube([7,1.5,7], center=true);
+                    translate([0,0,-4]) scale([1,1,6]) rotate([90,0,0]) cylinder(d=1.8,h=10, center=true);
+                }
+            }
             if (optimize_fdm) color(support_color) for (dx=[-1,1])
                 translate([dx*5.5,2.4,-0.1]) scale([0.4,1]) cylinder(d=2.3,h=5);
-            if (optimize_fdm) color(support_color) for (dx=[-1,1], dz=[1,2])
+            if (optimize_fdm) color(support_color) for (dx=[-1,1], dz=[1/*,2*/])
                 translate([dx*9.0,4.5,dz*7-0.1]) rotate([0,-dx*40,dx*35]) scale([0.4,1]) cylinder(d=1.8,h=5.5);
         }
 
@@ -79,6 +87,16 @@ module hinge_cover() {
             translate([0,0,3.4-0.1]) rotate([0,0,90]) linear_extrude(0.5) text("815-1098", size=1.5, halign="center", valign="center");
         }
     }
+    // sturdiness
+    if (optimize_fdm) for (a=[-1,1]) {
+        rotate([0,0,a*23.5]) difference() {
+            hull() {
+                for(dz=[0,1])
+                    translate([0,-14,22+dz*25]) sphere(d=2);
+            }
+            translate([0,-14,22]) cylinder(d=1,h=30);
+        }
+    }
     if (optimize_fdm)
         color(support_color) translate([-1.0,-13.4,5+1]) rotate([0,0,-35])
             scale([3,0.8,1.8]) sphere(d=1, $fn=20); 
@@ -90,7 +108,7 @@ module hinge_cover_fuzzy_skin_mod() {
     r = 3;
 
     difference() {
-        translate([0,0,0.2]) cylinder(d = 30, h = 50);
+        translate([0,0,0.2]) cylinder(d = 30.5, h = 50);
         translate([0,0,1]) cylinder(d = 28-1, h = 50);
         translate([0,0,5]) cylinder(d = 31, h = 2);
         translate([0,-14,16.8]) linear_extrude(24) square([17.0,10], center=true);
@@ -102,6 +120,8 @@ if (RENDER_MODIFIER) {
     //TODO: modifier for fuzzy skin
     hinge_cover_fuzzy_skin_mod();
 } else {
+//intersection() {
     color(preview_color ? "#bfbcb1" : 0) hinge_cover();
-    //if ($preview) color("yellow", 0.2) hinge_cover_fuzzy_skin_mod();
+    if ($preview && preview_modifier) color("yellow", 0.2) hinge_cover_fuzzy_skin_mod();
+//rotate([0,0,190]) cube(30);}
 }
