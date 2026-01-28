@@ -50,6 +50,8 @@ export_svg = false;
 
 fan_size = 140;
 
+fan_base_no_inner = false;
+
 // x, y, z, radius, thickness, back cut width, back cut height
 G4_cube_models_bbox = [
     [ 196.85, 196.85, 249, 17.5, 4.3, 136, 60 ], // original G4 case
@@ -360,16 +362,18 @@ module G4_fan_base(h = fan_base_height, th = 5) {
 
     color(preview_base_color) G4_fan_base_vents();
 
-    color("red"/*preview_base_color*/) translate($preview?[0,0,10+preview_distance*1.5/4]:[220,0,0]) G4_fan_base_filter();
+    if (!fan_base_no_inner) {
+        color("red"/*preview_base_color*/) translate($preview?[0,0,10+preview_distance*1.5/4]:[220,0,0]) G4_fan_base_filter();
 
-    // the filter
-    if ($preview) color("Ivory", 0.5) translate([0,0,10+2+preview_distance*2/4]) linear_extrude(3) square(fan_size*[1,1], center=true);
+        // the filter
+        if ($preview) color("Ivory", 0.5) translate([0,0,10+2+preview_distance*2/4]) linear_extrude(3) square(fan_size*[1,1], center=true);
 
-    color("blue"/*preview_base_color*/) translate($preview?[0,0,10+5+preview_distance*2.5/4]:[400,0,0]) G4_fan_base_grill();
-    
-    if ($preview) translate([0,0,25/2 + 10 + 5 + 2 + preview_distance*3.3/4]) fan(fan140x25);
+        color("blue"/*preview_base_color*/) translate($preview?[0,0,10+5+preview_distance*2.5/4]:[400,0,0]) G4_fan_base_grill();
 
-    color("darkblue"/*preview_base_color*/) translate($preview?[0,0,10+5+2+25+2+preview_distance*3.8/4]:[600,0,0]) rotate([180,0,0]) G4_fan_base_grill();
+        if ($preview) translate([0,0,25/2 + 10 + 5 + 2 + preview_distance*3.3/4]) fan(fan140x25);
+
+        color("darkblue"/*preview_base_color*/) translate($preview?[0,0,10+5+2+25+2+preview_distance*3.8/4]:[600,0,0]) rotate([180,0,0]) G4_fan_base_grill();
+    }
 }
 
 difference() {
