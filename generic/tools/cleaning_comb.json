@@ -19,6 +19,16 @@
             "teeth": "3",
             "thickness": "1",
             "width": "1.8"
+        },
+        "MO5": {
+            "$fn": "20",
+            "depth": "3.7",
+            "handle_height": "20",
+            "label": "MO5",
+            "pitch": "8",
+            "teeth": "5",
+            "thickness": "1",
+            "width": "3.4"
         }
     },
     "fileFormatVersion": "1",
