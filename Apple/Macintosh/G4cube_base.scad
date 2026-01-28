@@ -111,7 +111,7 @@ module G4() {
 
 }
 
-module G4_LED_base(h = 10, th = 5) {
+module G4_LED_base_body(h = 10, th = 5) {
     margin = insertion_margin;
     strip_w = 11;
     strip_s = [-0.04, 0.043];
@@ -161,6 +161,36 @@ module G4_LED_base(h = 10, th = 5) {
         // the back cutout for cables
         if (back_cutout)
             G4_back_cutout(delta = -5);
+    }
+}
+
+module G4_LED_base(h = 10, th = 5) {
+    module splitter(o=0) {
+        r = G4_bbox[3];
+        translate([0,0,h/4+h*0.351/2-o]) difference() {
+            linear_extrude(h)
+                G4_outline(delta = -G4_bbox[4]/2);
+            for(dx=[-1,1],dy=[-1,1])
+                translate([dx*(G4_bbox.x/2-r),dy*(G4_bbox.y/2-r)]) {
+                    r_clip = r-G4_bbox[4]-th*0.6-o;
+                    cylinder(r=r_clip, h=3*h, center=true);
+                    translate([0,0,h*0.2]) cylinder(r1=r_clip,r2=r_clip+th*0.1, h=h*0.2);
+                    translate([0,0,h*0.4]) cylinder(r1=r_clip+th*0.1,r2=r_clip, h=h*0.2);
+                }
+        }
+    }
+    color(preview_base_color) {
+        translate($preview?[0,0,0+preview_distance*2.3]:[0,0,-h/4-h*0.351/2])
+            intersection() {
+                G4_LED_base_body(h, th);
+                splitter();
+            }
+        translate($preview?[0,0,0+preview_distance*2]:[220,0,0])
+            difference() {
+                G4_LED_base_body(h, th);
+                splitter(o=0.2);
+            }
+        //translate($preview?[0,0,0+preview_distance*1.5/4]:[220,0,0])
     }
 }
 
@@ -346,11 +376,11 @@ difference() {
     union() {
 
         if (export_svg)
-            projection() G4_LED_base(h = base_height, th = base_thickness);
+            projection() G4_LED_base_body(h = base_height, th = base_thickness);
         else {
 
-            if (enable_LED_base) color(preview_base_color, 0.2)
-                translate($preview?[0,0,(enable_fan_base?fan_base_height:0)+(enable_cable_base?cable_base_height:0)+preview_distance*2]:[0,0,0])
+            if (enable_LED_base)
+                translate($preview?[0,0,(enable_fan_base?fan_base_height:0)+(enable_cable_base?cable_base_height:0)]:[0,0,0])
                     G4_LED_base(h = base_height, th = base_thickness);
 
             if (enable_cable_base) color(preview_base_color, 0.4)
