@@ -235,7 +235,7 @@ module G4_fan_base_vents(h = fan_base_height, th = 5) {
     margin = insertion_margin;
     strip_w = 11;
     strip_s = [-0.04, 0.043];
-    vents_z_scale = 0.4;
+    vents_z_scale = 0.7;
     difference() {
         linear_extrude(h) difference() {
             G4_outline(delta = th);
@@ -316,10 +316,10 @@ module G4_fan_base_filter(h = fan_base_height, th = 5) {
         filter_border(fan_size+7);
     }
     intersection() {
-        linear_extrude(10, scale=[(G4_bbox.x-2*G4_bbox[4]-2*th)/(f_size+5*2),(G4_bbox.y-2*G4_bbox[4]-2*th)/(f_size+5*2)]) {
+        linear_extrude(20, scale=[(G4_bbox.x-2*G4_bbox[4]-2*th)/(f_size+5*2),(G4_bbox.y-2*G4_bbox[4]-2*th)/(f_size+5*2)]) {
             filter_border();
         }
-        linear_extrude(30, center=true) G4_outline(delta = -G4_bbox[4] - th - 0.2);
+        linear_extrude(60, center=true) G4_outline(delta = -G4_bbox[4] - th - 0.2);
     }
 }
 
