@@ -5,14 +5,19 @@
 
 optimize_fdm = true;
 
-builtin_supports = false;
+// Add built-in supports: a ring for the ridge, and pilars for the clips.
+builtin_supports = true;
 
 preview_color = true;
 
 preview_modifier = false;
 
 // [Hidden]
-$fn=$preview ? 30 : 50;
+$fn=$preview ? 30 : 80;
+//$fn=30;
+//$fn = $preview ? 30 : 0;
+
+$fs = $preview ? 2 : 0.2;
 
 RENDER_MODIFIER = false;
 
