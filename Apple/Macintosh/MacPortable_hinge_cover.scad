@@ -5,6 +5,8 @@
 
 optimize_fdm = true;
 
+builtin_supports = false;
+
 preview_color = true;
 
 preview_modifier = false;
@@ -33,7 +35,7 @@ module hinge_cover() {
         translate([0,0,5]) difference() {
             cylinder(d=30, h = 2);
             translate([0,0,-1]) cylinder(d=28-3, h = 4);
-            if (optimize_fdm) color(support_color) translate([0,0,1]) {
+            if (builtin_supports) color(support_color) translate([0,0,1]) {
                 for (i=[0:3]) difference() {
                     cylinder(d=27+i/5, h=2-i/4, center=true);
                     cylinder(d=26.7-i/5, h=4, center=true);
@@ -65,9 +67,9 @@ module hinge_cover() {
                     translate([0,0,-4]) scale([1,1,6]) rotate([90,0,0]) cylinder(d=1.8,h=10, center=true);
                 }
             }
-            if (optimize_fdm) color(support_color) for (dx=[-1,1])
+            if (builtin_supports) color(support_color) for (dx=[-1,1])
                 translate([dx*5.5,2.4,-0.1]) scale([0.4,1]) cylinder(d=2.3,h=5);
-            if (optimize_fdm) color(support_color) for (dx=[-1,1], dz=[1/*,2*/])
+            if (builtin_supports) color(support_color) for (dx=[-1,1], dz=[1/*,2*/])
                 translate([dx*9.0,4.5,dz*7-0.1]) rotate([0,-dx*40,dx*35]) scale([0.4,1]) cylinder(d=1.8,h=5.5);
         }
 
@@ -97,7 +99,7 @@ module hinge_cover() {
             translate([0,-14,22]) cylinder(d=1,h=30);
         }
     }
-    if (optimize_fdm)
+    if (builtin_supports)
         color(support_color) translate([-1.0,-13.4,5+1]) rotate([0,0,-35])
             scale([3,0.8,1.8]) sphere(d=1, $fn=20); 
     // DEBUG: bbox
