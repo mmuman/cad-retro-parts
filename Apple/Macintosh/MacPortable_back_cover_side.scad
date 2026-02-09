@@ -3,7 +3,11 @@
 
 // [Printing]
 
+// Add extra material for sturdiness, and avoid supports when possible.
 optimize_fdm = true;
+
+// Add more strength to the back clip, as it seems they can break with some filaments. Shouldn't be required with ColorFabb RAL 7044.
+optimize_non_colorfabb = true;
 
 // [Options]
 
@@ -71,6 +75,13 @@ module back_cover_side() {
             }
             translate([4.8,28.2,18+3.3]) cube([1.0,9,3]);
             translate([4.8,28.2,21+3.3]) cube([1.0,20.5,2]);
+            if (optimize_non_colorfabb) translate([0.3+1+4,28.2,3.3-1]) {
+                translate([0,0,19])
+                    cube([8,9,3]);
+                translate([8,0,0])
+                    linear_extrude(22,scale=[0.3,0.5])
+                        square([4,18]);
+            }
         }
     }
 
