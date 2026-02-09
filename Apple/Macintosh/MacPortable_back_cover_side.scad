@@ -49,7 +49,7 @@ module back_cover_side() {
     module clip2() {
         clip_r = 0.5;
         translate([0.3,28.2,3.3]) difference() {
-            translate([1,0,-1]) cube([6,9,19]);
+            translate([1,0,-1]) #cube([6,8.8,19]);
             translate([5/2-0.1,10/2-0.1,20/2+5.23-3.3]) difference() {
                 cube([5,10,20], center=true);
                 translate([5/2,0-1,11.1-20/2]) linear_extrude(5,scale=[0.2,1]) square([4,11], center=true);
@@ -73,13 +73,13 @@ module back_cover_side() {
                 // internal reinforcement
                 translate([1,4,-1]) cylinder(d=0.8,h=18);
             }
-            translate([4.8,28.2,18+3.3]) cube([1.0,9,3]);
+            translate([4.8,28.2,18+3.3]) cube([1.0,8.8,3]);
             translate([4.8,28.2,21+3.3]) cube([1.0,20.5,2]);
             if (optimize_non_colorfabb) translate([0.3+1+4,28.2,3.3-1]) {
                 translate([0,0,19])
-                    cube([8,9,3]);
+                    cube([8,8.8,3]);
                 translate([8,0,0])
-                    linear_extrude(22,scale=[0.3,0.5])
+                    linear_extrude(22,scale=[0.3,0.49])
                         square([4,18]);
             }
         }
