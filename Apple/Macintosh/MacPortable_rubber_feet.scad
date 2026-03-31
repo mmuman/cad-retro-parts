@@ -1,9 +1,10 @@
 // Rubber feet for the Macintosh Portable
-// Copyright François Revol, 2025
+// Copyright François Revol, 2025-2026
 
 optimize_fdm = true;
 
 //$fa = 0.5;
+
 $fn=30;
 
 /* [Hidden] */
@@ -47,8 +48,8 @@ module foot_flat() {
         translate([0,dy*12.7/2,bh]) rotate([0,0,dy*90]) {
             linear_extrude(ch, scale=[1.5/1.7,0.8]) translate([-1.7/2,0,0]) square([1.7,2], center=true);
             linear_extrude(ch, scale=[1.5/2.5,2/3]) translate([-2.5/2,0,0]) square([2.5,0.9], center=true);
-            translate([0,0,2.3+0.2]) linear_extrude(0.3, scale=[1.0*2/0.2,optimize_fdm?1.44:0.98]) translate([2.5/2*0,0,0]) square([0.2,1.73], center=true);
-            translate([0,0,2.3+0.5]) linear_extrude(1-0.5, scale=[optimize_fdm?1.3:1.1,0.95]) translate([2.5/2*0,0,0]) square([2.0,optimize_fdm ? 2.5 : 1.69], center=true);
+            translate([optimize_fdm?-0.4:0,0,2.3+0.2]) linear_extrude(optimize_fdm?0.6:0.3, scale=[1.0*2/0.2,optimize_fdm?1.44:0.98]) translate([2.5/2*0,0,0]) square([0.2,1.73], center=true);
+            translate([optimize_fdm?-0.4:0,0,optimize_fdm?3.1:2.3+0.5]) linear_extrude(optimize_fdm?0.8:(1-0.5), scale=[optimize_fdm?1.6:1.1,optimize_fdm?1.2:0.95]) translate([2.5/2*0,0,0]) square([2.0,optimize_fdm ? 2.5 : 1.69], center=true);
         }
     // DEBUG
     //#translate([0,0,bh+2.6/2]) cube([d,12.9,2.6], center=true);
@@ -72,9 +73,9 @@ module foot_angled() {
                     translate([0,dy*(l/2-1.4),0]) cube(l, center=true);
                 }
                 difference() {
-                    translate([0,-dy*l*0.2,bh]) linear_extrude(6.4, scale=[1.2/1.6,0.9]) square([1.6,8], center=true);
+                    translate([0,-dy*l*0.2,bh]) linear_extrude(6.4+0.2, scale=[1.2/1.6,0.9]) square([1.6,8.4], center=true);
                     translate([0,-dy*l*0.4,bh+2.4/2-0.2]) cube([4,2.4,2.4], center=true);
-                    translate([0,-dy*l*0.408,bh+2.4-0.21]) linear_extrude(0.4, scale=[1,0.01]) square([2,2.4+0.3], center=true);
+                    translate([0,-dy*l*0.419,bh+2.4-0.21]) linear_extrude(optimize_fdm?0.8:0.4, scale=[1,0.01]) square([2,2.4+0.7], center=true);
                     // avoids smashing in the mirrored part
                     translate([0,0*dy*l*0.4,bh+6.4]) cube([4,7,2], center=true);
                 }
@@ -87,6 +88,7 @@ module foot_angled() {
                 rotate([90,0,90]) translate([0,0,-ar])
                     foot_base(d=d+0.1);
     //#cylinder(r = 3);
+    if (optimize_fdm) translate([0,-3.9,5.2]) sphere(d=2.7);
     // DEBUG: bbox
     //#translate([0,1.5-10.6/2,10.6/2]) cube([4,10.6,10.6], center=true);
 
