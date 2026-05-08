@@ -34,23 +34,25 @@ module shock_mount() {
         */
         difference() {
             spheroid(o=2.2);
-            translate([0,0,-base_bbox.z/2]) cylinder(d=spring_post_D,h=4.6);
+            translate([0,0,-base_bbox.z/2]) cylinder(d=spring_post_D,h=5);
             hull() for(dz=[-1,1])
                 translate([0,0,base_bbox.z/2+dz*1.5]) sphere(d=spring_post_D-0.3);
         }
         for (dx=[-1,1])
             translate([dx*(bbox.x/2+0.5),0,0])
                 cylinder(d=bbox.y/5, h=bbox.z, center=true);
-        #translate([0,0,-base_bbox.z/2-0.01]) cylinder(d=3, h=3.5);
-        translate([0,0,-base_bbox.z/2+3.5-0.01]) cylinder(d1=3, d2=2, h=0.5);
+        translate([0,0,-base_bbox.z/2-0.01]) cylinder(d=3.5, h=0.51);
+        translate([0,0,-base_bbox.z/2+0.5-0.01]) cylinder(d1=3.5, d2=3, h=0.5);
+        translate([0,0,-base_bbox.z/2-0.01]) cylinder(d=3, h=4);
+        translate([0,0,-base_bbox.z/2+4-0.01]) cylinder(d1=3, d2=1, h=0.5);
         if ($preview) translate([0,0,-20]) cube(100);
         if (optimize_fdm)
-            translate([0,base_bbox.y/4,-base_bbox.z/2+0.3]) rotate([0,180,0]) linear_extrude(0.4) text("316", size=2, halign="center", valign="center");
+            translate([0,base_bbox.y/4,-base_bbox.z/2+0.3]) rotate([0,180,180]) linear_extrude(0.4) text("316", size=2, halign="center", valign="center");
     }
     translate([0,0,base_bbox.z+insert_bbox.z/2]) cube(insert_bbox, center=true);
     translate([0,0,base_bbox.z+insert_bbox.z]) linear_extrude(lock_bbox.z, scale=[1,0]) square([lock_bbox.x,lock_bbox.y], center=true);
     if (!optimize_fdm)
-        translate([0,base_bbox.y/4,0]) rotate([0,180,0]) linear_extrude(0.4) text("316", size=2, halign="center", valign="center");
+        translate([0,base_bbox.y/4,0]) rotate([0,180,180]) linear_extrude(0.4) text("316", size=2, halign="center", valign="center");
 }
 
 translate($preview?[0,0,0]:[0,0,bbox.x/2])
