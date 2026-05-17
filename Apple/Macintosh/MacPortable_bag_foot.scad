@@ -12,11 +12,16 @@ print_bottom = true;
 
 print_top = true;
 
+/*[Adjustments]*/
+
+insert_margin = 0.4; // [-1.0:2.0]
+
 /*[Preview]*/
 
 preview_distance = 40;
 
 preview_bbox = true;
+
 
 /*[Model parameters (do not touch)]*/
 
@@ -88,7 +93,7 @@ module foot_top() {
         linear_extrude(0.9) square(5.6*[1,1], center=true);
         intersection() {
             // not a perfect cylinder
-            scale([1,5.7/5.8]) cylinder(d=hole_diameter, h=14.2);
+            scale([1,5.7/5.8]) cylinder(d=hole_diameter+insert_margin, h=14.2);
             union() {
                 linear_extrude(15)
                     offset(optimize_fdm?0.3:0)
