@@ -5,11 +5,14 @@
 
 optimize_fdm = true;
 
+EXPORT_SUPPORTS_BLOCKER = false;
+
 /*[Model]*/
 
 total_height = 78.5;
 
-$fn=$preview ? 60 : 360;
+// Beware, STL size in MB is about as many
+$fn=$preview ? 60 : 240;
 
 module rod()
 {
@@ -56,7 +59,7 @@ module handle() {
             for (i = [0:len(points)-2]) {
                 hull() {
                     translate(points[i]) circle(r=r/3);
-                    translate(points[i]+[0,points[i].z*.5]) circle(r=r/3);
+                    //translate(points[i]+[0,points[i].z*.5]) circle(r=r/3);
                     if (i==0)
                         translate(points[i+1]) circle(r=r/3);
                 }
@@ -65,7 +68,7 @@ module handle() {
         translate([55/2-3+3,0]+(optimize_fdm?[0,0]:[0,0.4]))
             rotate(optimize_fdm?[0,0,0]:[0,0,-5])
                 translate([-3.5,0])
-                square([3.5,2.5]);
+                square([3.5,optimize_fdm?2.0:2.2]);
     }
 
     difference() {
@@ -102,7 +105,13 @@ module handle() {
     }
 }
 
-/*color("darkgrey")*/ handle();
+if (!EXPORT_SUPPORTS_BLOCKER || $preview) {
+    /*color("darkgrey")*/ handle();
+}
+
+if (EXPORT_SUPPORTS_BLOCKER || $preview) {
+    color("orange", 0.2) cylinder(d = 18, h = 80);
+}
 
 if ($preview)
     color("white", 0.2) rod();
