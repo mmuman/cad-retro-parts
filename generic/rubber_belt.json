@@ -1,0 +1,10 @@
+{
+    "fileFormatVersion": "1",
+    "parameterSets": {
+        "Citizen W1D (tight)": {
+            "ID": "65",
+            "height": "1",
+            "thickness": "0.5"
+        }
+    }
+}
