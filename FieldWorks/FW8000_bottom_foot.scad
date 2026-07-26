@@ -19,4 +19,8 @@ module FW8000_foot() {
     }
 }
 
-FW8000_foot();
+if ($preview) {
+    FW8000_foot();
+} else {
+    translate([0,0,bbox.z]) rotate([0,180,0]) FW8000_foot();
+}
