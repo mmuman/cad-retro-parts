@@ -1,6 +1,11 @@
 // VAIO N Series port replicator connector bumpers
 // Copyright François Revol, 2025
 
+// For:
+//
+// PCGA-PR5
+// PCGA-UPR5
+
 module VAIO_N_port_rep_conn_bumper() {
     h = 8.5;
     points = [
