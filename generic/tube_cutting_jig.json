@@ -1,0 +1,13 @@
+{
+    "fileFormatVersion": "1",
+    "parameterSets": {
+        "Mac Portable Trackall": {
+            "$fn": "60",
+            "blade_thickness": "0.5",
+            "label": "Portable Trackball",
+            "tube_OD": "4",
+            "tube_OD_margin": "0.20000000000000001",
+            "tube_length": "3"
+        }
+    }
+}
