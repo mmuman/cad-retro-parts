@@ -1,4 +1,4 @@
-// Test rig for Hinge cover for the Macintosh Portable
+// Test jig for Hinge cover for the Macintosh Portable
 // Copyright François Revol, 2026
 
 
